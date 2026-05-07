@@ -1,0 +1,850 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="theme-color" content="#E91E63" />
+<title>TM Café — TrulyMadly</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --pink-bg-1:#FBD9E5; --pink-bg-2:#FCE4EC; --pink-bg-3:#FFF0F5;
+    --primary-pink:#E91E63; --coral:#FF6B5B;
+    --cta-green:#22C55E; --cta-green-dark:#16A34A;
+    --navy:#1F2937; --mint:#DCFCE7; --gold:#F59E0B;
+    --green-ring:#22C55E;
+  }
+  *{box-sizing:border-box;}
+  html,body{font-family:'Poppins',ui-sans-serif,system-ui,sans-serif;margin:0;padding:0;}
+  body{background:#0b0b0f;overflow:hidden;}
+  .phone-shell{
+    width:390px;height:844px;
+    border-radius:48px;
+    background:linear-gradient(180deg,var(--pink-bg-1) 0%,var(--pink-bg-2) 60%,#fff 100%);
+    box-shadow:0 30px 80px rgba(0,0,0,0.45),0 0 0 12px #111 inset,0 0 0 14px #2a2a2a;
+    overflow:hidden;position:relative;
+  }
+  .notch{position:absolute;top:8px;left:50%;transform:translateX(-50%);width:120px;height:32px;background:#000;border-radius:20px;z-index:60;}
+  .status-bar{position:absolute;top:0;left:0;right:0;height:50px;display:flex;align-items:center;justify-content:space-between;padding:14px 28px 0 28px;font-size:15px;font-weight:600;color:#111;z-index:50;}
+  .screen{position:absolute;inset:0;padding-top:50px;display:none;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;}
+  .screen.active{display:block;}
+  .screen::-webkit-scrollbar{display:none;}
+  .pink-gradient{background:linear-gradient(180deg,#FBD9E5 0%,#FCE4EC 30%,#FFF0F5 80%);}
+  .card-shadow{box-shadow:0 4px 18px rgba(233,30,99,0.08),0 1px 3px rgba(0,0,0,0.04);}
+  .ring-green{box-shadow:0 0 0 3px var(--green-ring);}
+  .nav-pill{background:#fff;border-radius:999px;box-shadow:0 8px 24px rgba(0,0,0,0.08),0 1px 3px rgba(0,0,0,0.04);}
+  .seg-pill{background:#1F2937;border-radius:999px;}
+  .verified-tick{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:#1DA1F2;color:#fff;font-size:11px;font-weight:700;}
+  .green-pill{background:var(--cta-green);}
+  .green-pill:hover{background:var(--cta-green-dark);}
+  .price-chip{background:var(--mint);color:#15803D;font-weight:600;border-radius:8px;padding:4px 10px;font-size:12px;display:inline-flex;align-items:center;justify-content:center;}
+  .ring-pulse{position:absolute;border:3px solid rgba(34,197,94,0.4);border-radius:50%;animation:ringPulse 2.4s ease-out infinite;}
+  @keyframes ringPulse{0%{transform:scale(0.9);opacity:0.7;}100%{transform:scale(1.4);opacity:0;}}
+  .push-banner{animation:slideDown 0.5s cubic-bezier(0.4,0,0.2,1) forwards;transform:translateY(-110%);}
+  @keyframes slideDown{to{transform:translateY(0);}}
+  .upi-sheet{transform:translateY(100%);transition:transform 0.4s cubic-bezier(0.4,0,0.2,1);}
+  .upi-sheet.open{transform:translateY(0);}
+  .ios-banner{background:rgba(255,255,255,0.96);backdrop-filter:blur(20px);border-radius:16px;box-shadow:0 8px 30px rgba(0,0,0,0.18);}
+  .recommended-chip{background:#FEF3C7;color:#92400E;font-size:11px;font-weight:600;padding:5px 10px;border-radius:8px;display:inline-block;}
+  .lang-pill{background:#fff;color:#374151;border:1.5px solid #E91E63;border-radius:999px;padding:6px 14px;font-size:13px;font-weight:500;cursor:pointer;white-space:nowrap;}
+  .lang-pill.active{background:#E91E63;color:#fff;font-weight:600;}
+  .safety-note{background:#F0FDF4;border:1px solid #BBF7D0;border-radius:12px;padding:10px 14px;font-size:12px;color:#166534;}
+  .timer-mono{font-variant-numeric:tabular-nums;}
+  .dot-red{width:8px;height:8px;border-radius:50%;background:#EF4444;}
+  .demo-pill{position:fixed;top:14px;right:14px;z-index:100;background:#111;color:#fff;padding:6px 12px;border-radius:999px;font-size:11px;font-weight:600;box-shadow:0 4px 12px rgba(0,0,0,0.3);cursor:pointer;display:flex;align-items:center;gap:6px;opacity:0.85;}
+  .demo-pill:hover{opacity:1;}
+  @media (max-width:900px){
+    body{background:linear-gradient(180deg,#FBD9E5 0%,#FCE4EC 30%,#FFF0F5 80%);overflow:auto;}
+    .phone-shell{box-shadow:none;border-radius:0;width:100vw;height:100vh;height:100dvh;}
+    .notch{display:none;}
+  }
+  .emo-card{background:#fff;border-radius:24px;padding:16px;box-shadow:0 4px 12px rgba(233,30,99,0.06);cursor:pointer;transition:transform 0.15s,box-shadow 0.15s;display:flex;flex-direction:column;gap:6px;min-height:130px;}
+  .emo-card:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(233,30,99,0.12);}
+  .emo-icon{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;}
+  /* ElevenLabs widget positioning override */
+  elevenlabs-convai{position:fixed!important;bottom:20px!important;right:20px!important;z-index:90;}
+</style>
+</head>
+<body class="min-h-screen flex items-center justify-center">
+
+<!-- Demo controls — outside phone frame on desktop -->
+<div class="demo-pill" id="demo-pill" onclick="toggleDemoMenu()">
+  <span>⋮</span> Demo
+</div>
+<div id="demo-menu" style="display:none;position:fixed;top:50px;right:14px;z-index:100;background:#111;color:#fff;border-radius:12px;padding:8px;min-width:180px;box-shadow:0 8px 24px rgba(0,0,0,0.4);">
+  <button onclick="goTo(0);closeDemoMenu()" class="block w-full text-left px-3 py-2 hover:bg-gray-800 rounded text-xs">↺ Reset to Homepage</button>
+  <button onclick="goTo(3);closeDemoMenu()" class="block w-full text-left px-3 py-2 hover:bg-gray-800 rounded text-xs">⚡ Simulate trigger</button>
+  <button onclick="closeDemoMenu()" class="block w-full text-left px-3 py-2 hover:bg-gray-800 rounded text-xs text-gray-400">Close</button>
+</div>
+
+<div class="phone-shell">
+  <div class="notch"></div>
+  <div class="status-bar">
+    <span>9:41</span>
+    <div class="flex items-center gap-1.5">
+      <svg width="18" height="12" viewBox="0 0 18 12" fill="currentColor"><rect x="0" y="6" width="3" height="6" rx="1"/><rect x="5" y="3" width="3" height="9" rx="1"/><rect x="10" y="0" width="3" height="12" rx="1"/></svg>
+      <svg width="16" height="12" viewBox="0 0 16 12" fill="currentColor"><path d="M8 2C5.5 2 3.2 2.9 1.4 4.5l-1-1C2.5 1.5 5.2 0.5 8 0.5s5.5 1 7.6 3l-1 1C12.8 2.9 10.5 2 8 2z"/></svg>
+      <svg width="24" height="12" viewBox="0 0 24 12" fill="none" stroke="currentColor" stroke-width="1"><rect x="1" y="2" width="20" height="8" rx="2"/><rect x="3" y="4" width="14" height="4" rx="0.5" fill="currentColor"/><rect x="22" y="4" width="1.5" height="4" rx="0.5" fill="currentColor"/></svg>
+    </div>
+  </div>
+
+  <!-- =========================================================== FRAME 1 — Homepage =========================================================== -->
+  <div id="screen-0" class="screen active pink-gradient">
+    <div class="px-5 pt-4 pb-2 flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <div class="w-9 h-9 rounded-xl flex items-center justify-center" style="background:radial-gradient(circle at 30% 30%,#E91E63,#9333EA);"><span class="text-white font-bold text-sm">tm</span></div>
+        <span class="font-bold text-lg" style="color:#111;">TrulyMadly</span>
+      </div>
+      <div class="flex items-center gap-3">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2"><path d="M3 5h18M3 12h18M3 19h18"/></svg>
+      </div>
+    </div>
+
+    <!-- Café Intro Hero -->
+    <div class="px-4 pt-2">
+      <div class="bg-white rounded-3xl card-shadow overflow-hidden">
+        <div class="px-4 py-3 flex items-center gap-3" style="background:linear-gradient(135deg,#FFE4EC 0%,#F3E8FF 50%,#E0F2FE 100%);">
+          <div class="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0" style="background:linear-gradient(135deg,#E91E63,#9333EA);box-shadow:0 4px 12px rgba(147,51,234,0.3);">
+            <span class="text-white text-xs font-bold italic">Café</span>
+          </div>
+          <div class="flex-1">
+            <div class="text-base font-bold text-gray-900 leading-tight">Welcome to TM Café</div>
+            <div class="text-[11px] text-gray-700 leading-tight">Real conversations · Real humans · When you need them</div>
+          </div>
+        </div>
+        <div class="px-4 py-3 space-y-2.5">
+          <div class="flex items-start gap-3">
+            <div class="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0" style="background:#FCE4EC;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="#E91E63"><path d="M12 21s-7-4.5-9.5-9C0.5 8 3 4 7 4c2 0 3.5 1 5 3 1.5-2 3-3 5-3 4 0 6.5 4 4.5 8C19 16.5 12 21 12 21z"/></svg>
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center justify-between"><span class="text-sm font-bold text-gray-900">Listeners</span><span class="text-[10px] font-semibold text-green-700">from ₹99/min</span></div>
+              <div class="text-[11px] text-gray-600 leading-tight">Vent the bad date, the breakup, the lonely Sunday. No advice — just heard.</div>
+            </div>
+          </div>
+          <div class="flex items-start gap-3">
+            <div class="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0" style="background:#F3E8FF;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="#9333EA"><path d="M12 2 4 6v6c0 5 3.5 9 8 10 4.5-1 8-5 8-10V6z"/></svg>
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center justify-between"><span class="text-sm font-bold text-gray-900">Coaches</span><span class="text-[10px] font-semibold text-green-700">from ₹149/min</span></div>
+              <div class="text-[11px] text-gray-600 leading-tight">Dating tips, profile makeovers, confidence work, pre-date prep.</div>
+            </div>
+          </div>
+          <div class="flex items-start gap-3">
+            <div class="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0" style="background:#FEF3C7;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="#F59E0B"><polygon points="12 2 15 8.5 22 9.3 17 14 18.2 21 12 17.8 5.8 21 7 14 2 9.3 9 8.5"/></svg>
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center justify-between"><span class="text-sm font-bold text-gray-900">Astrologers</span><span class="text-[10px] font-semibold text-green-700">from ₹12/min</span></div>
+              <div class="text-[11px] text-gray-600 leading-tight">Tarot, Vedic compatibility, "kab milega," life-path readings.</div>
+            </div>
+          </div>
+        </div>
+        <div class="px-4 pb-3 pt-1">
+          <div class="rounded-xl px-3 py-2 mb-2.5 flex items-center gap-2" style="background:#F0FDF4;border:1px solid #BBF7D0;">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="#16A34A"><path d="M13 2 3 14h7l-1 8 11-12h-7z"/></svg>
+            <span class="text-[11px] font-semibold text-green-800">First 5 min free with any new expert · No auto-renew</span>
+          </div>
+          <button class="green-pill text-white font-semibold w-full py-2.5 rounded-xl flex items-center justify-center gap-1.5 text-sm" onclick="goTo(1)">
+            Explore Café <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Profile card -->
+    <div class="px-4 pt-3">
+      <div class="bg-white rounded-3xl card-shadow overflow-hidden">
+        <div class="relative h-72" style="background:linear-gradient(135deg,#FFB7C5 0%,#FF8AB3 100%);">
+          <div class="absolute inset-0 flex items-center justify-center text-7xl font-bold text-white/80">A</div>
+          <div class="absolute top-3 left-3 flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-white text-xs font-semibold" style="background:linear-gradient(90deg,#9333EA,#E91E63);">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.5 4.5L18 8l-4.5 1.5L12 14l-1.5-4.5L6 8l4.5-1.5z"/></svg>
+            Astro 92%
+          </div>
+          <div class="absolute top-3 right-3 bg-black/40 text-white text-xs px-2.5 py-1 rounded-full">1/4</div>
+          <div class="absolute bottom-0 left-0 right-0 p-4 text-white" style="background:linear-gradient(0deg,rgba(0,0,0,0.7),transparent);">
+            <div class="flex items-center gap-2"><span class="text-2xl font-bold">Ananya, 27</span><span class="verified-tick">✓</span></div>
+            <div class="text-sm opacity-90">Bengaluru · 3 km away · Product Designer · Loves trekking</div>
+          </div>
+        </div>
+        <div class="px-4 py-3 flex items-center justify-around">
+          <button class="w-12 h-12 rounded-full bg-white border border-gray-200 flex items-center justify-center" style="box-shadow:0 2px 6px rgba(0,0,0,0.08);">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2.5"><path d="M18 6 6 18M6 6l12 12"/></svg>
+          </button>
+          <button class="w-14 h-14 rounded-full flex items-center justify-center" style="background:linear-gradient(135deg,#E91E63,#FF6B5B);box-shadow:0 6px 20px rgba(233,30,99,0.4);">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="white"><path d="M12 21s-7-4.5-9.5-9C0.5 8 3 4 7 4c2 0 3.5 1 5 3 1.5-2 3-3 5-3 4 0 6.5 4 4.5 8C19 16.5 12 21 12 21z"/></svg>
+          </button>
+          <button class="w-12 h-12 rounded-full bg-white border border-gray-200 flex items-center justify-center" style="box-shadow:0 2px 6px rgba(0,0,0,0.08);">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="#FBBF24"><polygon points="12 2 15 8.5 22 9.3 17 14 18.2 21 12 17.8 5.8 21 7 14 2 9.3 9 8.5"/></svg>
+          </button>
+        </div>
+      </div>
+      <p class="text-center text-xs text-gray-500 mt-3 mb-24">Astro Compatibility unlocked · <span class="text-pink-600 font-semibold">Tap to know more</span></p>
+    </div>
+
+    <div class="absolute bottom-4 left-4 right-4 nav-pill flex items-center justify-around py-2.5 px-3">
+      <div class="flex flex-col items-center gap-0.5"><div class="w-7 h-7 rounded-md bg-pink-100 flex items-center justify-center"><span class="text-pink-600 text-xs font-bold">tm</span></div><span class="text-[10px] font-semibold text-gray-900">Suggested</span></div>
+      <div class="flex flex-col items-center gap-0.5 opacity-60"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#374151" stroke-width="2"><path d="M12 21s-7-4.5-9.5-9C0.5 8 3 4 7 4c2 0 3.5 1 5 3 1.5-2 3-3 5-3 4 0 6.5 4 4.5 8C19 16.5 12 21 12 21z"/></svg><span class="text-[10px] font-medium text-gray-700">Likes You</span></div>
+      <div class="flex flex-col items-center gap-0.5 opacity-60 relative"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#374151" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span class="text-[10px] font-medium text-gray-700">Chat</span><div class="absolute -top-1 right-2 dot-red"></div></div>
+      <div class="flex flex-col items-center gap-0.5 opacity-60"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#374151" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg><span class="text-[10px] font-medium text-gray-700">Me</span></div>
+      <div class="flex flex-col items-center gap-0.5 relative" onclick="goTo(2)" style="cursor:pointer">
+        <div class="w-7 h-7 rounded-full flex items-center justify-center" style="background:linear-gradient(135deg,#E91E63,#9333EA);"><span class="text-white text-[10px] font-bold italic">Café</span></div>
+        <span class="text-[10px] font-semibold" style="color:#9333EA;">Café</span>
+        <div class="absolute -top-1 right-1 dot-red"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================== FRAME 2 — What brings you here? =========================================================== -->
+  <div id="screen-1" class="screen pink-gradient">
+    <div class="px-5 pt-4 pb-3 flex items-center justify-between">
+      <button onclick="goTo(0)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#E91E63" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></button>
+      <span class="text-base font-bold text-gray-900">What brings you here?</span>
+      <button onclick="goTo(2)" class="text-xs font-semibold text-pink-600 underline">Skip</button>
+    </div>
+
+    <div class="px-4 pb-2">
+      <div class="text-lg font-bold text-gray-900">Tell us a bit.</div>
+      <div class="text-xs text-gray-600 mt-1 leading-relaxed">We'll match you with the right person. Change your mind any time — first 5 min always free.</div>
+    </div>
+
+    <!-- Language picker -->
+    <div class="px-4 pt-3 pb-2">
+      <div class="text-[10px] uppercase tracking-wider text-gray-500 font-semibold mb-2">TALK IN</div>
+      <div class="flex items-center gap-2 overflow-x-auto pb-2" style="scrollbar-width:none;">
+        <button class="lang-pill active" onclick="selectLang(this,'English')">English</button>
+        <button class="lang-pill" onclick="selectLang(this,'Hindi')">हिन्दी · Hindi</button>
+        <button class="lang-pill" onclick="selectLang(this,'Hinglish')">Hinglish</button>
+        <button class="lang-pill" onclick="selectLang(this,'Tamil')">தமிழ் · Tamil</button>
+      </div>
+      <div class="text-[11px] text-gray-500 mt-1">Your match will speak this language fluently.</div>
+    </div>
+
+    <!-- 6 emotional state cards -->
+    <div class="px-4 grid grid-cols-2 gap-3 mt-2 pb-32">
+      <div class="emo-card" onclick="pickState('Recent breakup')">
+        <div class="emo-icon" style="background:#FCE4EC;">💔</div>
+        <div class="text-sm font-bold text-pink-700">Recent breakup</div>
+        <div class="text-[11px] text-gray-600 leading-snug">Same Listener for 2-3 weeks helps.</div>
+      </div>
+      <div class="emo-card" onclick="pickState('Got ghosted')">
+        <div class="emo-icon" style="background:#F3E8FF;">👻</div>
+        <div class="text-sm font-bold text-gray-900">Got ghosted</div>
+        <div class="text-[11px] text-gray-600 leading-snug">The "what did I do?" loop.</div>
+      </div>
+      <div class="emo-card" onclick="pickState('Lonely Sunday')">
+        <div class="emo-icon" style="background:#E0E7FF;">🌙</div>
+        <div class="text-sm font-bold text-gray-900">Lonely Sunday</div>
+        <div class="text-[11px] text-gray-600 leading-snug">6+ months single. Festival blues.</div>
+      </div>
+      <div class="emo-card" onclick="pickState('Pre-date jitters')">
+        <div class="emo-icon" style="background:#FEF3C7;">✨</div>
+        <div class="text-sm font-bold text-gray-900">Pre-date jitters</div>
+        <div class="text-[11px] text-gray-600 leading-snug">First date this week. Need a hype call.</div>
+      </div>
+      <div class="emo-card" onclick="pickState('Family pressure')">
+        <div class="emo-icon" style="background:#FED7AA;">🎭</div>
+        <div class="text-sm font-bold text-gray-900">Family pressure</div>
+        <div class="text-[11px] text-gray-600 leading-snug">Arranged marriage proposals piling up.</div>
+      </div>
+      <div class="emo-card" onclick="pickState('Stuck overthinking')">
+        <div class="emo-icon" style="background:#D1FAE5;">💭</div>
+        <div class="text-sm font-bold text-gray-900">Stuck overthinking</div>
+        <div class="text-[11px] text-gray-600 leading-snug">About a match. About a text. About everything.</div>
+      </div>
+    </div>
+
+    <div class="absolute bottom-20 left-0 right-0 text-center">
+      <button onclick="goTo(2)" class="text-xs font-semibold text-pink-600 underline">Browse all experts instead →</button>
+    </div>
+  </div>
+
+  <!-- =========================================================== FRAME 3 — TM Café tab (browse) =========================================================== -->
+  <div id="screen-2" class="screen pink-gradient">
+    <div class="px-5 pt-4 pb-3 flex items-start justify-between">
+      <div class="flex items-center gap-2">
+        <button onclick="goTo(1)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#E91E63" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></button>
+        <div>
+          <div class="text-2xl font-bold text-gray-900 leading-tight">TM Café</div>
+          <div class="text-xs font-semibold mt-0.5" style="color:#0EA5E9;text-decoration:underline;">Tap to know more</div>
+        </div>
+      </div>
+      <div class="flex items-center bg-gray-900 rounded-2xl overflow-hidden">
+        <div class="px-3 py-2 flex items-center gap-2"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><rect x="2" y="6" width="20" height="13" rx="2"/></svg><span class="text-white text-sm font-semibold">₹0</span></div>
+        <button class="px-3 py-2 text-white text-xl font-bold border-l border-gray-700">+</button>
+      </div>
+    </div>
+
+    <div class="px-4 space-y-3 pb-44">
+      <!-- Niharika (replaces Akruti) -->
+      <div class="bg-white rounded-3xl card-shadow p-4">
+        <div class="flex items-start gap-3">
+          <div class="w-16 h-16 rounded-full ring-green flex-shrink-0" style="background:linear-gradient(135deg,#FB923C,#F97316);display:flex;align-items:center;justify-content:center;">
+            <span class="text-white text-xl font-bold">N</span>
+          </div>
+          <div class="flex-1">
+            <div class="flex items-center gap-2"><span class="text-lg font-bold">Niharika</span><span class="verified-tick">✓</span></div>
+            <div class="flex items-center gap-1.5 mt-1 text-xs text-gray-700">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="#FBBF24"><polygon points="12 2 15 8.5 22 9.3 17 14 18.2 21 12 17.8 5.8 21 7 14 2 9.3 9 8.5"/></svg>
+              <span class="font-semibold">4.9 (412)</span><span>·</span><span>148 hrs</span>
+            </div>
+            <div class="text-xs text-gray-700 mt-1">Listener · Breakup recovery</div>
+          </div>
+          <button><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2"><polygon points="12 2 15 8.5 22 9.3 17 14 18.2 21 12 17.8 5.8 21 7 14 2 9.3 9 8.5"/></svg></button>
+        </div>
+        <div class="mt-3 italic text-gray-700 text-sm">"I survived losing my love. I'll just listen."</div>
+        <div class="mt-3">
+          <div class="flex justify-end mb-1.5"><span class="price-chip">₹149/min</span></div>
+          <button class="green-pill text-white font-semibold w-full py-3 rounded-xl flex items-center justify-center gap-2" onclick="goTo(6)">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.37 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.33 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            Call Now
+          </button>
+        </div>
+      </div>
+
+      <!-- Vrushali -->
+      <div class="bg-white rounded-3xl card-shadow p-4">
+        <div class="flex items-start gap-3">
+          <div class="w-16 h-16 rounded-full ring-green flex-shrink-0" style="background:linear-gradient(135deg,#F59E0B,#FB923C);display:flex;align-items:center;justify-content:center;">
+            <span class="text-white text-xl font-bold">V</span>
+          </div>
+          <div class="flex-1">
+            <div class="flex items-center gap-2"><span class="text-lg font-bold">Vrushali</span><span class="verified-tick">✓</span></div>
+            <div class="flex items-center gap-1.5 mt-1 text-xs text-gray-700">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="#FBBF24"><polygon points="12 2 15 8.5 22 9.3 17 14 18.2 21 12 17.8 5.8 21 7 14 2 9.3 9 8.5"/></svg>
+              <span class="font-semibold">4.7 (2772)</span><span>·</span><span>201 hrs</span>
+            </div>
+            <div class="text-xs text-gray-700 mt-1">Astrologer</div>
+          </div>
+        </div>
+        <div class="mt-3 italic text-gray-700 text-sm">"Tarot & Astrology for Real-Life Answers"</div>
+        <div class="grid grid-cols-2 gap-2 mt-3">
+          <div><div class="flex justify-center mb-1.5"><span class="price-chip">₹14/min</span></div><button class="green-pill text-white font-semibold w-full py-2.5 rounded-xl text-sm" onclick="goTo(6)">Audio</button></div>
+          <div><div class="flex justify-center mb-1.5"><span class="price-chip">₹12/min</span></div><button class="green-pill text-white font-semibold w-full py-2.5 rounded-xl text-sm">Chat</button></div>
+        </div>
+      </div>
+
+      <!-- Mauli -->
+      <div class="bg-white rounded-3xl card-shadow p-4">
+        <div class="flex items-start gap-3">
+          <div class="w-16 h-16 rounded-full ring-green flex-shrink-0" style="background:linear-gradient(135deg,#10B981,#059669);display:flex;align-items:center;justify-content:center;">
+            <span class="text-white text-xl font-bold">M</span>
+          </div>
+          <div class="flex-1">
+            <div class="flex items-center gap-2"><span class="text-lg font-bold">Mauli</span><span class="verified-tick">✓</span></div>
+            <div class="flex items-center gap-1.5 mt-1 text-xs text-gray-700">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="#FBBF24"><polygon points="12 2 15 8.5 22 9.3 17 14 18.2 21 12 17.8 5.8 21 7 14 2 9.3 9 8.5"/></svg>
+              <span class="font-semibold">4.8 (2120)</span><span>·</span><span>763 hrs</span>
+            </div>
+            <div class="text-xs text-gray-700 mt-1">Dating Coach</div>
+          </div>
+        </div>
+        <div class="mt-3 italic text-gray-700 text-sm">"Build the Confidence You've Been Missing"</div>
+        <div class="mt-3">
+          <div class="flex justify-end mb-1.5"><span class="price-chip">₹16/min</span></div>
+          <button class="green-pill text-white font-semibold w-full py-3 rounded-xl flex items-center justify-center gap-2" onclick="goTo(6)">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.37 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.33 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            Call Now
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="absolute left-0 right-0 bottom-0 px-4 pb-4">
+      <div class="flex justify-center mb-3">
+        <div class="seg-pill flex items-center gap-1 px-2 py-1.5">
+          <button class="text-white font-semibold text-xs px-3 py-1.5 rounded-full" style="background:#E91E63;">Coaches</button>
+          <button class="text-gray-300 font-medium text-xs px-3 py-1.5 relative">Astrologers<span class="absolute top-0 right-0 dot-red" style="width:6px;height:6px;"></span></button>
+          <button class="text-gray-300 font-medium text-xs px-3 py-1.5 relative">Listeners<span class="absolute top-0 right-0 dot-red" style="width:6px;height:6px;"></span></button>
+        </div>
+      </div>
+      <div class="rounded-2xl p-3 mb-3 flex items-center justify-between" style="background:#DCFCE7;">
+        <div>
+          <div class="font-bold text-gray-900 text-sm">Free ₹100 Balance</div>
+          <div class="text-[11px] text-gray-700 mt-0.5">For matchmakers · Café experts: first 5 min always free</div>
+        </div>
+        <button class="green-pill text-white text-xs font-semibold px-3 py-1.5 rounded-full">Claim</button>
+      </div>
+      <div class="nav-pill flex items-center justify-around py-2.5 px-3">
+        <div onclick="goTo(0)" class="flex flex-col items-center gap-0.5 opacity-60 cursor-pointer"><span class="text-gray-700 text-xs font-bold">tm</span><span class="text-[10px] font-medium text-gray-700">Suggested</span></div>
+        <div class="flex flex-col items-center gap-0.5 opacity-60"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#374151" stroke-width="2"><path d="M12 21s-7-4.5-9.5-9C0.5 8 3 4 7 4c2 0 3.5 1 5 3 1.5-2 3-3 5-3 4 0 6.5 4 4.5 8C19 16.5 12 21 12 21z"/></svg><span class="text-[10px] font-medium text-gray-700">Likes You</span></div>
+        <div class="flex flex-col items-center gap-0.5 opacity-60"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#374151" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span class="text-[10px] font-medium text-gray-700">Chat</span></div>
+        <div class="flex flex-col items-center gap-0.5 opacity-60"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#374151" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg><span class="text-[10px] font-medium text-gray-700">Me</span></div>
+        <div class="flex flex-col items-center gap-0.5 relative">
+          <div class="w-7 h-7 rounded-full flex items-center justify-center" style="background:linear-gradient(135deg,#E91E63,#9333EA);"><span class="text-white text-[10px] font-bold italic">Café</span></div>
+          <span class="text-[10px] font-bold" style="color:#9333EA;">Café</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================== FRAME 4 — Trigger card =========================================================== -->
+  <div id="screen-3" class="screen pink-gradient">
+    <div class="px-5 pt-4 pb-2 flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <div class="w-9 h-9 rounded-xl flex items-center justify-center" style="background:radial-gradient(circle at 30% 30%,#E91E63,#9333EA);"><span class="text-white font-bold text-sm">tm</span></div>
+        <span class="font-bold text-lg" style="color:#111;">TrulyMadly</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded-full" style="background:#FCE4EC;color:#E91E63;">⚡ Moment match</span>
+      </div>
+    </div>
+
+    <div class="px-4 mt-3 space-y-3 pb-32">
+      <!-- Trigger card -->
+      <div class="bg-white rounded-3xl card-shadow overflow-hidden relative">
+        <button class="absolute top-3 right-3 w-7 h-7 rounded-full bg-gray-100 flex items-center justify-center z-10" onclick="goTo(0)">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#374151" stroke-width="3"><path d="M18 6 6 18M6 6l12 12"/></svg>
+        </button>
+        <div class="h-32 relative" style="background:linear-gradient(135deg,#FFE4EC 0%,#FFD1DC 50%,#FFB7C5 100%);">
+          <div class="absolute top-3 left-3 px-2.5 py-1 rounded-full text-white text-[10px] font-bold uppercase tracking-wider" style="background:rgba(0,0,0,0.5);">Just for you</div>
+          <div class="absolute inset-0 flex items-center justify-center">
+            <div class="w-20 h-20 rounded-full flex items-center justify-center" style="background:linear-gradient(135deg,#E91E63,#FF6B5B);box-shadow:0 8px 24px rgba(233,30,99,0.35);">
+              <svg width="36" height="36" viewBox="0 0 24 24" fill="white"><path d="M12 21s-7-4.5-9.5-9C0.5 8 3 4 7 4c2 0 3.5 1 5 3 1.5-2 3-3 5-3 4 0 6.5 4 4.5 8C19 16.5 12 21 12 21z"/></svg>
+            </div>
+          </div>
+        </div>
+        <div class="px-5 py-5">
+          <div class="text-xl font-bold text-gray-900 leading-snug">Tough week? You don't have to sit with it alone.</div>
+          <div class="text-sm text-gray-600 mt-2 leading-relaxed">Niharika has walked <span class="font-semibold text-gray-800">200+ people</span> through breakups. <span class="font-semibold text-green-700">First 5 min free.</span></div>
+          <div class="flex items-center gap-3 mt-4 pt-4 border-t border-gray-100">
+            <div class="w-12 h-12 rounded-full ring-green flex-shrink-0" style="background:linear-gradient(135deg,#FB923C,#F97316);display:flex;align-items:center;justify-content:center;"><span class="text-white font-bold">N</span></div>
+            <div class="flex-1">
+              <div class="flex items-center gap-1.5 text-sm font-semibold text-gray-900">Niharika <span class="verified-tick" style="width:14px;height:14px;font-size:9px;">✓</span></div>
+              <div class="text-xs text-gray-600 mt-0.5">4.9 (412) · Listener · <span class="text-pink-600 font-semibold">Breakup recovery</span></div>
+            </div>
+          </div>
+          <button class="green-pill text-white font-semibold w-full py-3.5 rounded-2xl mt-4 flex items-center justify-center gap-1.5" onclick="goTo(4)">Talk now <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg></button>
+          <button class="text-gray-500 font-medium w-full py-2 mt-1 text-sm" onclick="goTo(0)">Maybe later</button>
+        </div>
+      </div>
+
+      <div class="bg-white/80 rounded-2xl p-3 border-l-4" style="border-color:#E91E63;">
+        <div class="flex items-start gap-2">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#E91E63" stroke-width="2" class="mt-0.5"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+          <div>
+            <div class="text-[10px] font-bold uppercase tracking-wider text-pink-600">Why we're showing you this</div>
+            <div class="text-xs text-gray-700 mt-1">You marked a recent status change in your profile. We thought a Listener might help.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="absolute bottom-4 left-4 right-4 nav-pill flex items-center justify-around py-2.5 px-3">
+      <div class="flex flex-col items-center gap-0.5"><div class="w-7 h-7 rounded-md bg-pink-100 flex items-center justify-center"><span class="text-pink-600 text-xs font-bold">tm</span></div><span class="text-[10px] font-semibold text-gray-900">Suggested</span></div>
+      <div class="flex flex-col items-center gap-0.5 opacity-60"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#374151" stroke-width="2"><path d="M12 21s-7-4.5-9.5-9C0.5 8 3 4 7 4c2 0 3.5 1 5 3 1.5-2 3-3 5-3 4 0 6.5 4 4.5 8C19 16.5 12 21 12 21z"/></svg><span class="text-[10px] font-medium text-gray-700">Likes You</span></div>
+      <div class="flex flex-col items-center gap-0.5 opacity-60"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#374151" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span class="text-[10px] font-medium text-gray-700">Chat</span></div>
+      <div onclick="goTo(2)" class="flex flex-col items-center gap-0.5 relative cursor-pointer">
+        <div class="w-7 h-7 rounded-full flex items-center justify-center" style="background:linear-gradient(135deg,#E91E63,#9333EA);"><span class="text-white text-[10px] font-bold italic">Café</span></div>
+        <span class="text-[10px] font-semibold" style="color:#9333EA;">Café</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================== FRAME 5 — Listeners list =========================================================== -->
+  <div id="screen-4" class="screen pink-gradient">
+    <div class="px-5 pt-4 pb-3 flex items-center gap-3">
+      <button onclick="goTo(1)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#E91E63" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></button>
+      <div class="flex-1">
+        <div class="text-xl font-bold text-gray-900">Listeners for you</div>
+        <div class="text-xs text-gray-600">Hand-picked · Tier 2 pricing</div>
+      </div>
+      <div class="text-xs font-semibold text-gray-700">₹0</div>
+    </div>
+
+    <div class="px-4 pb-32 space-y-3">
+      <div class="flex flex-wrap gap-2 mb-1">
+        <span class="recommended-chip" id="rec-chip">⚡ Recommended for: Recent breakup</span>
+        <span class="text-[11px] font-semibold rounded-full px-3 py-1 flex items-center gap-1" style="background:#FCE4EC;color:#9D174D;">🌐 <span id="lang-chip">English</span> <span class="text-pink-300">×</span></span>
+      </div>
+      <div class="text-[11px] text-gray-500 mb-2">Showing 3 of 12 Listeners — speaks <span id="lang-text">English</span>, breakup recovery.</div>
+
+      <!-- Niharika BEST MATCH -->
+      <div class="bg-white rounded-3xl card-shadow p-4 relative" style="border:2px solid #FCD34D;">
+        <div class="absolute -top-3 left-3 px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider text-white" style="background:#F59E0B;">⭐ BEST MATCH</div>
+        <div class="flex items-start gap-3 mt-1">
+          <div class="w-16 h-16 rounded-full ring-green flex-shrink-0" style="background:linear-gradient(135deg,#FB923C,#F97316);display:flex;align-items:center;justify-content:center;"><span class="text-white text-xl font-bold">N</span></div>
+          <div class="flex-1">
+            <div class="flex items-center gap-2"><span class="text-lg font-bold">Niharika</span><span class="verified-tick">✓</span></div>
+            <div class="flex items-center gap-1.5 mt-1 text-xs text-gray-700">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="#FBBF24"><polygon points="12 2 15 8.5 22 9.3 17 14 18.2 21 12 17.8 5.8 21 7 14 2 9.3 9 8.5"/></svg>
+              <span class="font-semibold">4.9 (412)</span><span>·</span><span>148 hrs</span>
+            </div>
+            <div class="text-xs text-gray-600 mt-1.5 italic">"I survived losing my love. I'll just listen."</div>
+            <div class="flex flex-wrap gap-1 mt-2">
+              <span class="text-[10px] font-semibold px-2 py-0.5 rounded-full" style="background:#FCE4EC;color:#9D174D;">Breakup recovery</span>
+              <span class="text-[10px] font-semibold px-2 py-0.5 rounded-full" style="background:#F3E8FF;color:#6B21A8;">Hindi · English</span>
+            </div>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-2 mt-3">
+          <div><div class="flex justify-center mb-1.5"><span class="price-chip">₹149/min</span></div><button class="green-pill text-white font-semibold w-full py-2.5 rounded-xl text-sm" onclick="goTo(6)">Audio</button></div>
+          <div><div class="flex justify-center mb-1.5"><span class="price-chip">₹99/min</span></div><button class="green-pill text-white font-semibold w-full py-2.5 rounded-xl text-sm">Chat</button></div>
+        </div>
+        <div class="text-center mt-2 text-[11px] font-semibold text-green-700">⚡ First 5 min free with Niharika</div>
+      </div>
+
+      <!-- Khyati -->
+      <div class="bg-white rounded-3xl card-shadow p-4">
+        <div class="flex items-start gap-3">
+          <div class="w-14 h-14 rounded-full ring-green flex-shrink-0" style="background:linear-gradient(135deg,#A78BFA,#8B5CF6);display:flex;align-items:center;justify-content:center;"><span class="text-white text-lg font-bold">K</span></div>
+          <div class="flex-1">
+            <div class="flex items-center gap-2"><span class="text-base font-bold">Khyati</span><span class="verified-tick">✓</span></div>
+            <div class="flex items-center gap-1.5 mt-1 text-xs text-gray-700">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="#FBBF24"><polygon points="12 2 15 8.5 22 9.3 17 14 18.2 21 12 17.8 5.8 21 7 14 2 9.3 9 8.5"/></svg>
+              <span class="font-semibold">4.7 (308)</span><span>·</span><span>96 hrs</span>
+            </div>
+            <div class="text-[11px] text-gray-600 mt-1 italic">"I supported myself out of a toxic relationship."</div>
+          </div>
+          <span class="price-chip">₹129/min</span>
+        </div>
+      </div>
+
+      <!-- Riya -->
+      <div class="bg-white rounded-3xl card-shadow p-4">
+        <div class="flex items-start gap-3">
+          <div class="w-14 h-14 rounded-full ring-green flex-shrink-0" style="background:linear-gradient(135deg,#34D399,#10B981);display:flex;align-items:center;justify-content:center;"><span class="text-white text-lg font-bold">R</span></div>
+          <div class="flex-1">
+            <div class="flex items-center gap-2"><span class="text-base font-bold">Riya</span><span class="verified-tick">✓</span></div>
+            <div class="flex items-center gap-1.5 mt-1 text-xs text-gray-700">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="#FBBF24"><polygon points="12 2 15 8.5 22 9.3 17 14 18.2 21 12 17.8 5.8 21 7 14 2 9.3 9 8.5"/></svg>
+              <span class="font-semibold">4.8 (211)</span><span>·</span><span>72 hrs</span>
+            </div>
+            <div class="text-[11px] text-gray-600 mt-1 italic">"Ghosting hurts. You're not crazy for feeling it."</div>
+          </div>
+          <span class="price-chip">₹109/min</span>
+        </div>
+      </div>
+
+      <div class="safety-note flex items-center gap-2">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#166534" stroke-width="2"><path d="M12 2 4 6v6c0 5 3.5 9 8 10 4.5-1 8-5 8-10V6z"/></svg>
+        All experts are verified · No video required · Sessions never recorded
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================== FRAME 6 — In-call audio =========================================================== -->
+  <div id="screen-6" class="screen" style="background:linear-gradient(180deg,#0F1F2D 0%,#1F2937 100%);color:white;">
+    <div class="px-5 pt-4 pb-3 flex items-center justify-between">
+      <span class="text-xs font-semibold text-white/60">Audio call · Listener</span>
+      <span class="timer-mono text-sm font-semibold" id="call-timer">00:00</span>
+    </div>
+
+    <div class="flex flex-col items-center pt-8 px-6">
+      <div class="relative flex items-center justify-center mb-6" style="width:200px;height:200px;">
+        <div class="ring-pulse" style="width:200px;height:200px;"></div>
+        <div class="ring-pulse" style="width:200px;height:200px;animation-delay:0.8s;"></div>
+        <div class="w-40 h-40 rounded-full" style="background:linear-gradient(135deg,#FB923C,#F97316);display:flex;align-items:center;justify-content:center;box-shadow:0 0 60px rgba(251,146,60,0.5);">
+          <span class="text-white text-6xl font-bold">N</span>
+        </div>
+      </div>
+      <div class="text-2xl font-bold flex items-center gap-2">Niharika <span class="verified-tick">✓</span></div>
+      <div class="text-sm text-white/60 mt-1">Listener · Breakup recovery</div>
+
+      <div class="mt-6 w-full">
+        <div class="bg-white/10 rounded-2xl px-4 py-3 backdrop-blur-sm">
+          <div class="flex items-center justify-between text-xs">
+            <span class="font-semibold text-green-400">⚡ First 5 min free</span>
+            <span class="text-white/70">Then ₹149/min</span>
+          </div>
+          <div class="mt-2 h-1.5 bg-white/10 rounded-full overflow-hidden">
+            <div class="h-full bg-green-400 transition-all" id="progress-bar" style="width:0%"></div>
+          </div>
+          <div class="flex items-center justify-between mt-1.5 text-[10px] text-white/50">
+            <span id="progress-text">00:00 / 5:00</span>
+            <span>Wallet ₹0 · 5 min trial</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-4 px-4 py-3 bg-white/5 rounded-2xl text-center">
+        <div class="text-xs text-white/60 italic">"Take your time. There's nothing you can say here that will surprise me."</div>
+      </div>
+
+      <!-- ElevenLabs widget will appear floating in bottom-right (its default position) -->
+      <div class="mt-6 text-center">
+        <div class="text-xs text-white/40 mb-2">↓ Tap the mic widget to start the call</div>
+        <div class="text-[10px] text-white/30">Audio is end-to-end private · Powered by ElevenLabs</div>
+      </div>
+    </div>
+
+    <div class="absolute bottom-10 left-0 right-0 flex items-center justify-around px-12">
+      <button class="w-12 h-12 rounded-full bg-white/15 flex items-center justify-center backdrop-blur-sm">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M12 14a3 3 0 0 0 3-3V5a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3z"/><path d="M19 11a7 7 0 0 1-14 0M12 18v3"/></svg>
+      </button>
+      <button class="w-16 h-16 rounded-full flex items-center justify-center" style="background:#EF4444;box-shadow:0 6px 20px rgba(239,68,68,0.5);" onclick="endCall()">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="white" style="transform:rotate(135deg);"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.37 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.33 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+      </button>
+      <button class="w-12 h-12 rounded-full bg-white/15 flex items-center justify-center backdrop-blur-sm">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M4 15v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- =========================================================== FRAME 7 — Session-end =========================================================== -->
+  <div id="screen-7" class="screen pink-gradient">
+    <div class="px-5 pt-4 pb-3 flex items-center justify-between">
+      <span class="text-base font-bold" style="color:#E91E63;">TM Café</span>
+      <button onclick="goTo(2)" class="text-xs font-semibold text-gray-500">Done</button>
+    </div>
+
+    <div class="px-6 pt-4 pb-32">
+      <div class="text-center mb-6">
+        <div class="w-24 h-24 rounded-full mx-auto flex items-center justify-center mb-4" style="background:linear-gradient(135deg,#FFE4EC,#FFD1DC);">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#E91E63" stroke-width="2"><path d="M12 21s-7-4.5-9.5-9C0.5 8 3 4 7 4c2 0 3.5 1 5 3 1.5-2 3-3 5-3 4 0 6.5 4 4.5 8C19 16.5 12 21 12 21z"/></svg>
+        </div>
+        <div class="text-2xl font-bold text-gray-900 leading-snug">Thank you for showing up<br/>for yourself today.</div>
+        <div class="text-sm text-gray-600 mt-2">You spoke with Niharika.</div>
+      </div>
+
+      <div class="bg-white rounded-2xl card-shadow p-4 mb-3">
+        <div class="flex items-start gap-3">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#E91E63" stroke-width="2" class="mt-0.5"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 5L2 7"/></svg>
+          <div class="flex-1">
+            <div class="font-semibold text-sm text-gray-900">Email me a summary tomorrow morning</div>
+            <div class="text-xs text-gray-500 mt-0.5">A short note about what came up. We never share or store the call.</div>
+          </div>
+          <div class="relative w-11 h-6 bg-pink-600 rounded-full">
+            <div class="absolute w-5 h-5 bg-white rounded-full right-0.5 top-0.5"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-2xl card-shadow p-4 mb-3">
+        <div class="flex items-center gap-3 mb-3">
+          <div class="w-12 h-12 rounded-full ring-green flex-shrink-0" style="background:linear-gradient(135deg,#FB923C,#F97316);display:flex;align-items:center;justify-content:center;"><span class="text-white font-bold">N</span></div>
+          <div class="flex-1">
+            <div class="font-semibold text-sm text-gray-900">Niharika is here when you're ready</div>
+            <div class="text-xs text-gray-500">Same Listener, no re-explaining</div>
+          </div>
+        </div>
+        <button class="green-pill text-white font-semibold w-full py-3 rounded-xl" onclick="goTo(8)">Rebook Niharika in 3 days →</button>
+      </div>
+
+      <div class="bg-pink-50 rounded-2xl p-4 mb-3">
+        <div class="flex items-center gap-3 mb-2">
+          <div class="w-12 h-12 rounded-full flex-shrink-0" style="background:linear-gradient(135deg,#A78BFA,#8B5CF6);display:flex;align-items:center;justify-content:center;"><span class="text-white font-bold">E</span></div>
+          <div class="flex-1">
+            <div class="font-semibold text-sm text-gray-900">Try a Coach next week</div>
+            <div class="text-xs text-gray-500">Eva helps with what comes after the grief</div>
+          </div>
+        </div>
+        <button class="w-full py-2.5 rounded-xl border-2 border-gray-300 text-gray-700 font-semibold text-sm">Add to my plan</button>
+      </div>
+
+      <div class="text-center text-[11px] text-gray-500 mt-2 italic">"You don't have to figure it all out tonight."</div>
+    </div>
+  </div>
+
+  <!-- =========================================================== FRAME 8 — Day-3 push + UPI =========================================================== -->
+  <div id="screen-8" class="screen pink-gradient relative">
+    <div id="push-banner" class="absolute top-12 left-3 right-3 ios-banner p-3 z-40 push-banner" onclick="dismissPush()">
+      <div class="flex items-start gap-3">
+        <div class="w-8 h-8 rounded-md flex items-center justify-center flex-shrink-0" style="background:linear-gradient(135deg,#E91E63,#9333EA);"><span class="text-white text-[10px] font-bold italic">Café</span></div>
+        <div class="flex-1">
+          <div class="flex items-center justify-between"><span class="text-[10px] font-bold text-gray-700">TM CAFÉ</span><span class="text-[10px] text-gray-500">now</span></div>
+          <div class="text-sm font-semibold text-gray-900 mt-0.5">Niharika is free at 9pm tonight</div>
+          <div class="text-xs text-gray-600">Pick up where you left off. Recharge ₹199 to unlock.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="px-5 pt-4 pb-3 flex items-center justify-between" style="opacity:0.5;">
+      <span class="text-2xl font-bold text-gray-900">Suggested</span>
+      <span class="text-xs text-gray-500">Day 3 · 8:42 pm</span>
+    </div>
+    <div class="px-5" style="opacity:0.4;"><div class="bg-white rounded-3xl card-shadow h-64"></div></div>
+
+    <div id="upi-sheet" class="upi-sheet absolute bottom-0 left-0 right-0 bg-white rounded-t-3xl z-50 px-5 pt-4 pb-6 open" style="box-shadow:0 -10px 40px rgba(0,0,0,0.12);">
+      <div class="w-12 h-1.5 bg-gray-300 rounded-full mx-auto mb-4"></div>
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-12 h-12 rounded-full ring-green flex-shrink-0" style="background:linear-gradient(135deg,#FB923C,#F97316);display:flex;align-items:center;justify-content:center;"><span class="text-white font-bold">N</span></div>
+        <div class="flex-1">
+          <div class="text-sm font-semibold text-gray-900">Recharge to talk to Niharika</div>
+          <div class="text-xs text-gray-500">9:00 pm slot held · 5 mins left</div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-3 gap-2 mb-4">
+        <button class="border-2 border-gray-200 rounded-xl py-3 px-2 text-center"><div class="text-xs text-gray-500">₹99</div><div class="text-[10px] text-gray-400 mt-0.5">~40 sec</div></button>
+        <button class="rounded-xl py-3 px-2 text-center text-white relative" style="background:linear-gradient(135deg,#E91E63,#FF6B5B);box-shadow:0 4px 12px rgba(233,30,99,0.3);">
+          <div class="absolute -top-2 left-1/2 -translate-x-1/2 px-1.5 py-0.5 rounded text-[8px] font-bold uppercase tracking-wider text-white" style="background:#9333EA;">Recommended</div>
+          <div class="text-sm font-bold">₹199</div>
+          <div class="text-[10px] mt-0.5 font-semibold">+10% bonus</div>
+        </button>
+        <button class="border-2 border-gray-200 rounded-xl py-3 px-2 text-center"><div class="text-xs text-gray-700 font-semibold">₹499</div><div class="text-[10px] text-green-700 mt-0.5 font-semibold">+25% bonus</div></button>
+      </div>
+
+      <div class="bg-green-50 rounded-xl px-3 py-2 mb-4 flex items-center gap-2">
+        <span class="text-[10px] font-bold uppercase tracking-wider text-green-700">Bonus</span>
+        <span class="text-xs text-green-800">₹19 extra credited · valid 30 days</span>
+      </div>
+
+      <div class="text-xs font-semibold text-gray-500 mb-2 uppercase tracking-wider">Pay via UPI</div>
+      <div class="grid grid-cols-3 gap-2 mb-4">
+        <button class="border border-gray-200 rounded-xl py-2.5 flex flex-col items-center gap-1"><div class="w-8 h-8 rounded-md flex items-center justify-center" style="background:#5F259F;"><span class="text-white text-[10px] font-bold">Pe</span></div><span class="text-[10px] text-gray-700 font-medium">PhonePe</span></button>
+        <button class="border-2 rounded-xl py-2.5 flex flex-col items-center gap-1" style="border-color:#E91E63;"><div class="w-8 h-8 rounded-md flex items-center justify-center bg-white border border-gray-200"><span class="text-sm font-bold" style="background:linear-gradient(135deg,#4285F4 25%,#EA4335 50%,#FBBC04 75%,#34A853);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">G</span></div><span class="text-[10px] text-gray-900 font-semibold">GPay</span></button>
+        <button class="border border-gray-200 rounded-xl py-2.5 flex flex-col items-center gap-1"><div class="w-8 h-8 rounded-md flex items-center justify-center" style="background:#00BAF2;"><span class="text-white text-[10px] font-bold">Pa</span></div><span class="text-[10px] text-gray-700 font-medium">Paytm</span></button>
+      </div>
+
+      <button class="w-full py-3 rounded-2xl font-semibold text-white" style="background:linear-gradient(135deg,#E91E63,#FF6B5B);box-shadow:0 6px 20px rgba(233,30,99,0.35);" onclick="paySuccess()">Pay ₹199 via GPay →</button>
+      <div class="text-center mt-2 text-[10px] text-gray-400">No auto-renew · One-tap refund within 7 days</div>
+    </div>
+  </div>
+</div>
+
+<!-- ElevenLabs floating widget — only mounted when user enters /call -->
+
+<script>
+  let current = 0;
+  let callTimerInterval = null;
+  let callElapsedSec = 0;
+  let selectedLanguage = 'English';
+  let selectedState = 'Recent breakup';
+
+  function goTo(n){
+    document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+    const el = document.getElementById('screen-'+n);
+    if(el){el.classList.add('active');current=n;el.scrollTop=0;}
+
+    if(n === 6){
+      mountElevenLabsWidget();
+      startCallTimer();
+    } else {
+      unmountElevenLabsWidget();
+      stopCallTimer();
+    }
+
+    if(n === 8){
+      const sheet = document.getElementById('upi-sheet');
+      sheet.classList.remove('open');
+      setTimeout(()=>sheet.classList.add('open'), 300);
+    }
+  }
+
+  function selectLang(btn, lang){
+    document.querySelectorAll('.lang-pill').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    selectedLanguage = lang;
+  }
+
+  function pickState(state){
+    selectedState = state;
+    const recChip = document.getElementById('rec-chip');
+    const langChip = document.getElementById('lang-chip');
+    const langText = document.getElementById('lang-text');
+
+    let suffix = '';
+    if (state === 'Pre-date jitters' || state === 'Stuck overthinking') suffix = ' · Coach pool';
+    if (state === 'Family pressure') suffix = ' · Astrologer pool';
+
+    if (recChip) recChip.innerText = '⚡ Recommended for: ' + state + suffix;
+    if (langChip) langChip.innerText = selectedLanguage;
+    if (langText) langText.innerText = selectedLanguage;
+
+    goTo(4);
+  }
+
+  function startCallTimer(){
+    callElapsedSec = 0;
+    updateProgress();
+    if(callTimerInterval) clearInterval(callTimerInterval);
+    callTimerInterval = setInterval(() => {
+      callElapsedSec++;
+      updateProgress();
+    }, 1000);
+  }
+
+  function stopCallTimer(){
+    if(callTimerInterval) clearInterval(callTimerInterval);
+    callTimerInterval = null;
+  }
+
+  function updateProgress(){
+    const min = Math.floor(callElapsedSec / 60);
+    const sec = callElapsedSec % 60;
+    const formatted = String(min).padStart(2,'0') + ':' + String(sec).padStart(2,'0');
+    const timer = document.getElementById('call-timer');
+    const progressBar = document.getElementById('progress-bar');
+    const progressText = document.getElementById('progress-text');
+    if(timer) timer.innerText = formatted;
+    if(progressText) progressText.innerText = formatted + ' / 5:00';
+    if(progressBar){
+      const pct = Math.min(100, (callElapsedSec / 300) * 100);
+      progressBar.style.width = pct + '%';
+    }
+  }
+
+  function endCall(){
+    unmountElevenLabsWidget();
+    stopCallTimer();
+    goTo(7);
+  }
+
+  function dismissPush(){
+    const b=document.getElementById('push-banner');
+    if(b)b.style.display='none';
+  }
+
+  function paySuccess(){
+    alert('Demo: ₹199 paid via GPay. Niharika rebook confirmed for 9:00 pm.');
+    goTo(6);
+  }
+
+  function toggleDemoMenu(){
+    const menu = document.getElementById('demo-menu');
+    menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
+  }
+  function closeDemoMenu(){
+    document.getElementById('demo-menu').style.display = 'none';
+  }
+
+  // ============================================================
+  // ElevenLabs widget — mount/unmount based on route
+  // ============================================================
+  const ELEVENLABS_AGENT_ID = 'agent_8401kqzfx7n9ev78hx24a0gyy9g4';
+  let elevenLabsScriptLoaded = false;
+
+  function mountElevenLabsWidget(){
+    // Load the script once
+    if(!elevenLabsScriptLoaded){
+      const script = document.createElement('script');
+      script.src = 'https://elevenlabs.io/convai-widget/index.js';
+      script.async = true;
+      script.type = 'text/javascript';
+      document.body.appendChild(script);
+      elevenLabsScriptLoaded = true;
+    }
+    // Create the widget element if not already present
+    let widget = document.querySelector('elevenlabs-convai');
+    if(!widget){
+      widget = document.createElement('elevenlabs-convai');
+      widget.setAttribute('agent-id', ELEVENLABS_AGENT_ID);
+      document.body.appendChild(widget);
+    }
+  }
+
+  function unmountElevenLabsWidget(){
+    const widget = document.querySelector('elevenlabs-convai');
+    if(widget){
+      // Try to end any active session
+      try {
+        if(typeof widget.endSession === 'function') widget.endSession();
+      } catch(e){}
+      widget.remove();
+    }
+  }
+
+  document.addEventListener('keydown',(e)=>{
+    if(e.key==='Escape'){goTo(0);closeDemoMenu();}
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: tm-cafe
+    runtime: static
+    buildCommand: ""
+    staticPublishPath: .
+    pullRequestPreviewsEnabled: false
+    headers:
+      - path: /*
+        name: X-Frame-Options
+        value: SAMEORIGIN
+      - path: /*
+        name: Permissions-Policy
+        value: microphone=(self)
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
