@@ -84,56 +84,44 @@
   .frame-nav-num{width:26px;height:26px;border-radius:50%;background:#FCE4EC;color:#E91E63;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
   .frame-nav-label{font-size:13px;color:#111;font-weight:600;}
   .frame-nav-sub{font-size:10.5px;color:#6B7280;margin-top:1px;}
-  /* ElevenLabs widget — lives inside the in-call "glass control deck"
-     at the bottom so it reads as part of our UI, not a popup. The
-     widget keeps its native white card (shadow DOM is closed, can't
-     restyle internals) but the dark glass frame around it ties it
-     visually to the rest of the dark in-call screen. */
-  .call-deck{
-    position:absolute;left:16px;right:16px;bottom:24px;
-    z-index:55;display:flex;flex-direction:column;gap:12px;
-    /* Cap the deck so a tall widget popup (T&C modal, helpful prompt)
-       doesn't bleed over the content above. */
-    max-height:280px;
+  /* In-call audio — controlled programmatically via @11labs/client SDK
+     (no widget UI, no ElevenLabs chrome). Our own pre-call overlay,
+     pulsing avatar, timer, and 3-control row are the entire visual. */
+  .pre-call-overlay{
+    position:absolute;inset:0;z-index:60;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    background:rgba(11,18,32,0.78);
+    backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+    padding:0 24px;text-align:center;
   }
-  .call-deck-row{
-    display:flex;align-items:center;gap:10px;
-    background:rgba(255,255,255,0.06);
-    backdrop-filter:blur(18px);
-    -webkit-backdrop-filter:blur(18px);
-    border:1px solid rgba(255,255,255,0.10);
-    border-radius:22px;
-    padding:8px 10px;
-    box-shadow:0 10px 30px rgba(0,0,0,0.35);
-    max-height:260px;overflow:hidden;
+  .pre-call-overlay.hidden{display:none;}
+  .pre-call-headline{
+    color:#fff;font-size:18px;font-weight:600;line-height:1.35;
+    max-width:300px;margin-bottom:8px;
   }
-  .eleven-wrapper{
-    flex:1;min-width:0;display:flex;justify-content:center;
-    /* slight scale so widget visually fits the deck */
-    --tm-widget-scale:0.92;
+  .pre-call-sub{
+    color:rgba(255,255,255,0.6);font-size:12px;line-height:1.4;
+    max-width:300px;margin-bottom:24px;
   }
-  elevenlabs-convai{
-    position:relative!important;display:block;
-    transform:scale(var(--tm-widget-scale));
-    transform-origin:center;
-  }
-  .end-call-btn{
-    flex:0 0 auto;width:52px;height:52px;border-radius:50%;
-    display:flex;align-items:center;justify-content:center;
-    background:#EF4444;border:none;cursor:pointer;
-    box-shadow:0 6px 18px rgba(239,68,68,0.45);
-    transition:transform 0.12s;
-  }
-  .end-call-btn:hover{transform:scale(1.05);}
-  .end-call-btn:active{transform:scale(0.95);}
-  /* Status pill that replaces the widget — narrates session state. */
-  .call-status-pill{
+  .pre-call-cta{
+    background:#22C55E;color:#fff;font-weight:600;
+    border-radius:999px;border:none;cursor:pointer;
+    padding:14px 28px;font-size:15px;
     display:inline-flex;align-items:center;gap:8px;
-    background:rgba(34,197,94,0.16);color:#86EFAC;
-    border-radius:999px;padding:6px 14px;
-    font-size:11px;font-weight:600;letter-spacing:0.02em;
+    box-shadow:0 8px 24px rgba(34,197,94,0.45);
+    transition:transform 0.12s,opacity 0.12s;
   }
-  .call-status-pill .live-dot{
+  .pre-call-cta:disabled{opacity:0.6;cursor:wait;}
+  .pre-call-cta:not(:disabled):hover{transform:scale(1.03);}
+  .pre-call-cta:not(:disabled):active{transform:scale(0.97);}
+  .live-pill{
+    display:none;align-items:center;gap:6px;
+    background:rgba(34,197,94,0.18);color:#86EFAC;
+    padding:6px 14px;border-radius:999px;
+    font-size:11px;font-weight:600;
+  }
+  .live-pill.active{display:inline-flex;}
+  .live-pill .live-dot{
     width:7px;height:7px;border-radius:50%;background:#22C55E;
     box-shadow:0 0 0 0 rgba(34,197,94,0.6);
     animation:livePulse 1.6s ease-out infinite;
@@ -143,6 +131,27 @@
     70%{box-shadow:0 0 0 8px rgba(34,197,94,0);}
     100%{box-shadow:0 0 0 0 rgba(34,197,94,0);}
   }
+  .in-call-ctrl{
+    width:48px;height:48px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    border:none;cursor:pointer;
+    background:rgba(255,255,255,0.10);
+    backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+    transition:transform 0.12s,background 0.18s;
+  }
+  .in-call-ctrl:hover{transform:scale(1.05);}
+  .in-call-ctrl:active{transform:scale(0.95);}
+  .in-call-ctrl.muted{background:rgba(239,68,68,0.25);}
+  .in-call-end{
+    width:62px;height:62px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    border:none;cursor:pointer;
+    background:#EF4444;
+    box-shadow:0 0 36px rgba(239,68,68,0.55);
+    transition:transform 0.12s;
+  }
+  .in-call-end:hover{transform:scale(1.05);}
+  .in-call-end:active{transform:scale(0.95);}
   .avatar-img{width:100%;height:100%;border-radius:50%;object-fit:cover;display:block;}
   .avatar-circle{position:relative;overflow:hidden;}
 </style>
@@ -709,27 +718,39 @@
         <div class="text-xs text-white/60 italic">"Take your time. There's nothing you can say here that will surprise me."</div>
       </div>
 
-      <!-- Status pill lives in the content flow (NOT inside the .call-deck)
-           so a growing widget — e.g. when the T&C modal expands — never
-           overlaps it. -->
       <div class="mt-4 flex flex-col items-center gap-1.5">
-        <div class="call-status-pill" id="call-status">
+        <div class="live-pill" id="live-pill">
           <span class="live-dot"></span>
-          <span id="call-status-text">Tap “Start a call” to talk to Niharika</span>
+          <span>Niharika is here · live</span>
         </div>
         <div class="text-[10px] text-white/30">Audio is end-to-end private</div>
       </div>
     </div>
 
-    <!-- Glass control deck — only the widget + end button. Status pill
-         is rendered above in content flow (see the section right above). -->
-    <div class="call-deck">
-      <div class="call-deck-row">
-        <div class="eleven-wrapper" id="eleven-mount"></div>
-        <button class="end-call-btn" onclick="endCall()" title="End call &amp; see summary">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="white" style="transform:rotate(135deg);"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.37 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.33 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-        </button>
-      </div>
+    <!-- 3-control row at the bottom: mute · end-call · share. Each is
+         our own button, wired directly to the @11labs/client SDK. -->
+    <div class="absolute bottom-10 left-0 right-0 flex items-center justify-center gap-10">
+      <button id="mute-btn" class="in-call-ctrl" onclick="toggleMute()" title="Mute / unmute" aria-label="Mute microphone">
+        <svg id="mic-icon-on" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M12 14a3 3 0 0 0 3-3V5a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3z"/><path d="M19 11a7 7 0 0 1-14 0M12 18v3"/></svg>
+        <svg id="mic-icon-off" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FCA5A5" stroke-width="2" style="display:none;"><path d="M12 14a3 3 0 0 0 3-3V5a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3z"/><path d="M19 11a7 7 0 0 1-14 0M12 18v3M3 3l18 18"/></svg>
+      </button>
+      <button class="in-call-end" onclick="endCall()" title="End call" aria-label="End call">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="white" style="transform:rotate(135deg);"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.37 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.33 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+      </button>
+      <button class="in-call-ctrl" title="Share" aria-label="Share">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M4 15v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
+      </button>
+    </div>
+
+    <!-- Pre-call overlay: shown by default on Frame 6; hidden once the
+         user taps Start call and the SDK confirms onConnect. -->
+    <div class="pre-call-overlay" id="pre-call-overlay">
+      <div class="pre-call-headline">Tap to start your call with Niharika</div>
+      <div class="pre-call-sub">First 5 minutes free · You can end anytime · Allow microphone when asked</div>
+      <button id="pre-call-cta" class="pre-call-cta" onclick="startCallSdk()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.37 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.33 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        <span id="pre-call-cta-label">Start call</span>
+      </button>
     </div>
   </div>
 
@@ -860,10 +881,10 @@
     if(el){el.classList.add('active');current=n;el.scrollTop=0;}
 
     if(n === 6){
-      mountElevenLabsWidget();
-      startCallTimer();
+      // Reset to pre-call state every time we land on Frame 6
+      resetCallScreen();
     } else {
-      unmountElevenLabsWidget();
+      teardownCallSdk();
       stopCallTimer();
     }
 
@@ -939,7 +960,7 @@
   }
 
   function endCall(){
-    unmountElevenLabsWidget();
+    teardownCallSdk();
     stopCallTimer();
     goTo(7);
   }
@@ -979,143 +1000,110 @@
   }
 
   // ============================================================
-  // ElevenLabs widget — mount INSIDE phone-shell + auto-start session
+  // ElevenLabs Conversational AI — programmatic SDK approach.
+  // No <elevenlabs-convai> widget chrome; we render our own
+  // pre-call overlay + custom mute/end controls and drive the
+  // session via @11labs/client.startSession().
   // ============================================================
   const ELEVENLABS_AGENT_ID = 'agent_8401kqzfx7n9ev78hx24a0gyy9g4';
-  let elevenLabsScriptLoaded = false;
-  let callStatePollId = null;
+  let conversation = null;       // Active SDK Conversation instance
+  let isStartingCall = false;
+  let callIsLive = false;
+  let isMuted = false;
+  let ConversationCtor = null;   // Cached SDK constructor
 
-  function setCallStatus(text, color){
-    const el = document.getElementById('call-status-text');
-    const pill = document.getElementById('call-status');
-    if(el) el.textContent = text;
-    if(pill && color){
-      pill.style.background = color === 'red'
-        ? 'rgba(239,68,68,0.16)' : 'rgba(34,197,94,0.16)';
-      pill.style.color = color === 'red' ? '#FCA5A5' : '#86EFAC';
-      const dot = pill.querySelector('.live-dot');
-      if(dot) dot.style.background = color === 'red' ? '#EF4444' : '#22C55E';
+  async function loadConversationSdk(){
+    if(ConversationCtor) return ConversationCtor;
+    // ESM CDN — no build step needed. esm.sh handles browser-friendly
+    // module rewriting for the @11labs/client package.
+    const mod = await import('https://esm.sh/@11labs/client@latest');
+    ConversationCtor = mod.Conversation;
+    return ConversationCtor;
+  }
+
+  function setLivePillVisible(show){
+    const pill = document.getElementById('live-pill');
+    if(pill) pill.classList.toggle('active', !!show);
+  }
+
+  function setPreCallOverlay(visible, label){
+    const ov  = document.getElementById('pre-call-overlay');
+    const cta = document.getElementById('pre-call-cta');
+    const lab = document.getElementById('pre-call-cta-label');
+    if(ov)  ov.classList.toggle('hidden', !visible);
+    if(cta) cta.disabled = (label === 'Connecting…');
+    if(lab && label) lab.textContent = label;
+  }
+
+  function setMuteUi(muted){
+    isMuted = muted;
+    const btn = document.getElementById('mute-btn');
+    const on  = document.getElementById('mic-icon-on');
+    const off = document.getElementById('mic-icon-off');
+    if(btn) btn.classList.toggle('muted', muted);
+    if(on)  on.style.display  = muted ? 'none' : '';
+    if(off) off.style.display = muted ? '' : 'none';
+  }
+
+  function resetCallScreen(){
+    teardownCallSdk();
+    stopCallTimer();
+    setMuteUi(false);
+    setLivePillVisible(false);
+    setPreCallOverlay(true, 'Start call');
+  }
+
+  async function startCallSdk(){
+    if(isStartingCall || callIsLive) return;
+    isStartingCall = true;
+    setPreCallOverlay(true, 'Connecting…');
+    try {
+      // 1. Request mic permission first — clean error path if denied
+      await navigator.mediaDevices.getUserMedia({ audio: true });
+      // 2. Load SDK (cached after first call)
+      const Conversation = await loadConversationSdk();
+      // 3. Start the session
+      conversation = await Conversation.startSession({
+        agentId: ELEVENLABS_AGENT_ID,
+        connectionType: 'websocket',
+        onConnect: () => {
+          isStartingCall = false; callIsLive = true;
+          setPreCallOverlay(false);
+          setLivePillVisible(true);
+          startCallTimer();
+        },
+        onDisconnect: () => {
+          callIsLive = false; isStartingCall = false;
+          setLivePillVisible(false);
+          stopCallTimer();
+          // Auto-glide to session-end summary if user is still on Frame 6
+          if(current === 6) setTimeout(() => goTo(7), 200);
+        },
+        onError: (err) => {
+          console.error('[convai] error', err);
+          isStartingCall = false; callIsLive = false;
+          setPreCallOverlay(true, 'Start call');
+          alert('Audio error. Please refresh, allow microphone, and try again.');
+        },
+      });
+    } catch (err) {
+      console.error('[convai] start failed', err);
+      isStartingCall = false; callIsLive = false;
+      setPreCallOverlay(true, 'Start call');
+      alert('Could not start the call. Please allow microphone access and try again.');
     }
   }
 
-  function mountElevenLabsWidget(){
-    // Load the convai script once
-    if(!elevenLabsScriptLoaded){
-      const script = document.createElement('script');
-      script.src = 'https://elevenlabs.io/convai-widget/index.js';
-      script.async = true;
-      script.type = 'text/javascript';
-      document.body.appendChild(script);
-      elevenLabsScriptLoaded = true;
-    }
-    // Mount widget into the in-call control deck (#eleven-mount).
-    // It sits next to our End-call button in a single glass row, so
-    // the widget reads as native UI rather than a popup.
-    const mountSlot = document.getElementById('eleven-mount');
-    if(!mountSlot) return;
-    if(!mountSlot.querySelector('elevenlabs-convai')){
-      const widget = document.createElement('elevenlabs-convai');
-      widget.setAttribute('agent-id', ELEVENLABS_AGENT_ID);
-      // Branded text overrides — even if the widget chrome ever leaks
-      // through, the copy stays on-brand.
-      widget.setAttribute('action-text', "Hi, I'm Niharika — I'm here.");
-      widget.setAttribute('start-call-text', '📞 Start the call');
-      widget.setAttribute('end-call-text', 'End call');
-      widget.setAttribute('expand-text', 'Talk now');
-      widget.setAttribute('listening-text', 'Listening…');
-      widget.setAttribute('speaking-text', 'Niharika is speaking…');
-      widget.setAttribute('avatar-image-url', 'assets/niharika.jpg');
-      widget.setAttribute('avatar-orb-color-1', '#FB923C');
-      widget.setAttribute('avatar-orb-color-2', '#F97316');
-      mountSlot.appendChild(widget);
-
-      setCallStatus('Tap “Start a call” to talk to Niharika', 'green');
-
-      // Try the public startSession() API once if it exists. Otherwise
-      // we leave the widget visible so the user's own tap on "Start a
-      // call" provides the necessary user-gesture for mic + audio.
-      // (Synthetic clicks into the shadow DOM proved unreliable for
-      // triggering the browser permission/autoplay flow.)
-      const trySdkStart = (attempt) => {
-        const w = document.querySelector('elevenlabs-convai');
-        if(!w){
-          if(attempt<20) setTimeout(()=>trySdkStart(attempt+1), 250);
-          return;
-        }
-        try {
-          if(typeof w.startSession === 'function'){
-            w.startSession();
-            setCallStatus('Niharika is here · live', 'green');
-            return;
-          }
-        } catch(e){ console.warn('startSession failed', e); }
-        // No SDK method — user will tap the widget themselves.
-      };
-      setTimeout(()=>trySdkStart(0), 600);
-
-      // Listen for the widget's own session events under several
-      // possible names (the public API name has shifted across
-      // versions — listening to all of them is harmless if not emitted).
-      const widgetEl = mountSlot.querySelector('elevenlabs-convai');
-      if(widgetEl){
-        const STARTED = ['convai-session-started','call-start','session-started','el-call-start'];
-        const ENDED   = ['convai-session-ended','call-end','session-ended','el-call-end'];
-        STARTED.forEach(evt => widgetEl.addEventListener(evt, () =>
-          setCallStatus('Niharika is here · live', 'green')));
-        ENDED.forEach(evt => widgetEl.addEventListener(evt, () => {
-          setCallStatus('Call ended', 'red');
-          setTimeout(() => { if(current === 6) goTo(7); }, 1000);
-        }));
-        widgetEl.addEventListener('error', (e) => {
-          console.warn('convai error', e);
-          setCallStatus('Audio error — try Chrome / allow mic', 'red');
-        });
-      }
-
-      // Belt-and-braces: poll the widget DOM for visible-state cues
-      // so the pill + auto-navigate work even if no event ever fires.
-      // (ElevenLabs ConvAI's shadow DOM is sometimes closed; we walk
-      // both the light DOM and accessible shadow DOM.)
-      let lastDetected = 'idle';
-      callStatePollId = setInterval(() => {
-        if(current !== 6){ clearInterval(callStatePollId); callStatePollId=null; return; }
-        const w = document.querySelector('elevenlabs-convai');
-        if(!w) return;
-        let text = '';
-        try { text = (w.shadowRoot ? w.shadowRoot.textContent : '') || w.textContent || ''; }
-        catch(e){}
-        const t = text.toLowerCase();
-        let state = 'idle';
-        if(t.includes('was the call helpful') || t.includes('rate this conversation')) state = 'ended';
-        else if(t.includes('end call')) state = 'live';
-        else if(t.includes('listening') || t.includes('speaking')) state = 'live';
-        else if(t.includes('start the call') || t.includes('start a call') || t.includes("hi, i'm")) state = 'idle';
-        else if(t.includes('terms') && t.includes('agree')) state = 'consent';
-
-        if(state === lastDetected) return;
-        lastDetected = state;
-        if(state === 'live'){
-          setCallStatus('Niharika is here · live', 'green');
-        } else if(state === 'ended'){
-          setCallStatus('Call ended', 'red');
-          setTimeout(() => { if(current === 6) goTo(7); }, 1200);
-        } else if(state === 'consent'){
-          setCallStatus('One-time consent — tap Agree to continue', 'green');
-        } else if(state === 'idle'){
-          setCallStatus('Tap “Start a call” to talk to Niharika', 'green');
-        }
-      }, 700);
-    }
+  async function teardownCallSdk(){
+    try { await conversation?.endSession(); } catch(e) {}
+    conversation = null;
+    isStartingCall = false; callIsLive = false;
   }
 
-  function unmountElevenLabsWidget(){
-    if(callStatePollId){ clearInterval(callStatePollId); callStatePollId = null; }
-    const widget = document.querySelector('elevenlabs-convai');
-    if(widget){
-      try { if(typeof widget.endSession === 'function') widget.endSession(); } catch(e){}
-      widget.remove();
-    }
-    setCallStatus('Tap “Start a call” to talk to Niharika', 'green');
+  function toggleMute(){
+    const next = !isMuted;
+    setMuteUi(next);
+    try { conversation?.setMicMuted?.(next); } catch(e) { console.warn('mute failed', e); }
   }
 
   document.addEventListener('keydown',(e)=>{
