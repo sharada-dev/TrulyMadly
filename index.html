@@ -84,18 +84,25 @@
   .frame-nav-num{width:26px;height:26px;border-radius:50%;background:#FCE4EC;color:#E91E63;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
   .frame-nav-label{font-size:13px;color:#111;font-weight:600;}
   .frame-nav-sub{font-size:10.5px;color:#6B7280;margin-top:1px;}
-  /* ElevenLabs widget — mounted invisibly inside phone-shell on /call.
-     The widget powers the audio session; our own pulsing-ring avatar +
-     timer + end-call button are the visible UI. The default convai
-     "Need help? · Start a call" card is suppressed so the in-call
-     screen stays branded and uncluttered. */
+  /* ElevenLabs widget — visible inside phone-shell on Frame 6 so it
+     can actually establish the audio session and request mic permission.
+     Positioned in the empty space above our 3-control row, sized small
+     so it feels like a chip rather than a popup card. */
   .eleven-wrapper{
-    position:absolute;left:0;bottom:0;
-    width:1px;height:1px;overflow:hidden;
-    opacity:0;pointer-events:none;
-    z-index:-1;
+    position:absolute;
+    bottom:88px;left:50%;
+    transform:translateX(-50%) scale(0.85);
+    transform-origin:center bottom;
+    z-index:55;
   }
-  elevenlabs-convai{position:relative!important;display:block;}
+  elevenlabs-convai{
+    position:relative!important;display:block;
+    /* Soften the widget chrome to match dark theme */
+    --el-button-bg:#22C55E;
+    --el-button-color:#fff;
+    --el-bg:#1F2937;
+    --el-text:#fff;
+  }
   /* Status pill that replaces the widget — narrates session state. */
   .call-status-pill{
     display:inline-flex;align-items:center;gap:8px;
@@ -678,12 +685,12 @@
         <div class="text-xs text-white/60 italic">"Take your time. There's nothing you can say here that will surprise me."</div>
       </div>
 
-      <!-- The ElevenLabs widget is mounted invisibly inside the phone-shell;
-           this status pill is the only visible state indicator. -->
-      <div class="mt-6 text-center">
+      <!-- ElevenLabs widget mounts visibly here so audio + mic permission
+           work reliably. Status pill narrates state above the widget. -->
+      <div class="mt-4 text-center">
         <div class="call-status-pill" id="call-status">
           <span class="live-dot"></span>
-          <span id="call-status-text">Connecting to Niharika…</span>
+          <span id="call-status-text">Tap “Start a call” below to talk to Niharika</span>
         </div>
         <div class="text-[10px] text-white/30 mt-2">Audio is end-to-end private · Powered by ElevenLabs</div>
       </div>
@@ -988,43 +995,44 @@
       wrapper.appendChild(widget);
       phoneShell.appendChild(wrapper);
 
-      setCallStatus('Connecting to Niharika…', 'green');
+      setCallStatus('Tap “Start a call” below to talk to Niharika', 'green');
 
-      // Persistent auto-start: poll for the widget's start button and
-      // click it. The user-gesture context from the Audio/Call-Now tap
-      // satisfies the browser autoplay policy.
-      let started = false;
-      const tryStart = (attempt) => {
-        if(started) return;
+      // Try the public startSession() API once if it exists. Otherwise
+      // we leave the widget visible so the user's own tap on "Start a
+      // call" provides the necessary user-gesture for mic + audio.
+      // (Synthetic clicks into the shadow DOM proved unreliable for
+      // triggering the browser permission/autoplay flow.)
+      const trySdkStart = (attempt) => {
         const w = document.querySelector('elevenlabs-convai');
-        if(!w){ if(attempt<40) setTimeout(()=>tryStart(attempt+1), 200); return; }
+        if(!w){
+          if(attempt<20) setTimeout(()=>trySdkStart(attempt+1), 250);
+          return;
+        }
         try {
-          // Preferred: public method (some versions expose it)
           if(typeof w.startSession === 'function'){
-            w.startSession(); started = true;
+            w.startSession();
             setCallStatus('Niharika is here · live', 'green');
             return;
           }
-          // Fallback: click the widget's start button inside its shadow DOM
-          const root = w.shadowRoot;
-          if(root){
-            const candidates = root.querySelectorAll('button');
-            for(const btn of candidates){
-              const label = (btn.textContent||'').trim().toLowerCase();
-              if(label.includes('start') || label.includes('call') || label.includes('talk')){
-                btn.click(); started = true;
-                setCallStatus('Niharika is here · live', 'green');
-                return;
-              }
-            }
-            // No labelled button yet — try the first interactive button
-            if(candidates.length){ candidates[0].click(); }
-          }
-        } catch(e){}
-        if(attempt<40) setTimeout(()=>tryStart(attempt+1), 200);
-        else setCallStatus('Tap the widget to begin', 'green');
+        } catch(e){ console.warn('startSession failed', e); }
+        // No SDK method — user will tap the widget themselves.
       };
-      setTimeout(()=>tryStart(0), 400);
+      setTimeout(()=>trySdkStart(0), 600);
+
+      // When the convai widget dispatches its own session events, we
+      // can update our pill from the truth. (Event names per ElevenLabs
+      // public docs; harmless if not emitted.)
+      const widgetEl = wrapper.querySelector('elevenlabs-convai');
+      if(widgetEl){
+        widgetEl.addEventListener('convai-session-started', () =>
+          setCallStatus('Niharika is here · live', 'green'));
+        widgetEl.addEventListener('convai-session-ended', () =>
+          setCallStatus('Call ended', 'red'));
+        widgetEl.addEventListener('convai-error', (e) => {
+          console.warn('convai error', e);
+          setCallStatus('Audio error — try Chrome / allow mic', 'red');
+        });
+      }
     }
   }
 
