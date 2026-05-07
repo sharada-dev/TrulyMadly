@@ -69,24 +69,100 @@
   .emo-card{background:#fff;border-radius:24px;padding:16px;box-shadow:0 4px 12px rgba(233,30,99,0.06);cursor:pointer;transition:transform 0.15s,box-shadow 0.15s;display:flex;flex-direction:column;gap:6px;min-height:130px;}
   .emo-card:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(233,30,99,0.12);}
   .emo-icon{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;}
-  /* ElevenLabs widget positioning override */
-  elevenlabs-convai{position:fixed!important;bottom:20px!important;right:20px!important;z-index:90;}
+  /* TrulyMadly logo — clickable, opens frame navigator */
+  .tm-logo-btn{cursor:pointer;display:inline-flex;align-items:center;justify-content:center;border-radius:50%;background:transparent;border:none;padding:0;flex-shrink:0;transition:transform 0.15s;}
+  .tm-logo-btn:hover{transform:scale(1.05);}
+  .tm-logo-btn svg{display:block;}
+  /* Frame navigator overlay (opens when TM logo is clicked) */
+  .frame-nav-overlay{position:absolute;inset:0;background:rgba(0,0,0,0.45);z-index:90;display:none;backdrop-filter:blur(4px);}
+  .frame-nav-overlay.open{display:block;}
+  .frame-nav-panel{position:absolute;top:60px;left:16px;right:16px;background:#fff;border-radius:20px;box-shadow:0 12px 40px rgba(0,0,0,0.25);overflow:hidden;}
+  .frame-nav-panel header{padding:14px 16px 10px 16px;border-bottom:1px solid #f0f0f0;display:flex;align-items:center;justify-content:space-between;}
+  .frame-nav-row{display:flex;align-items:center;gap:12px;padding:11px 14px;cursor:pointer;border-bottom:1px solid #f6f6f6;}
+  .frame-nav-row:hover{background:#FFF0F5;}
+  .frame-nav-row:last-child{border-bottom:none;}
+  .frame-nav-num{width:26px;height:26px;border-radius:50%;background:#FCE4EC;color:#E91E63;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .frame-nav-label{font-size:13px;color:#111;font-weight:600;}
+  .frame-nav-sub{font-size:10.5px;color:#6B7280;margin-top:1px;}
+  /* ElevenLabs widget — pinned INSIDE phone-shell on /call */
+  .eleven-wrapper{position:absolute;bottom:96px;left:50%;transform:translateX(-50%);z-index:55;}
+  elevenlabs-convai{position:relative!important;display:block;}
+  .avatar-img{width:100%;height:100%;border-radius:50%;object-fit:cover;display:block;}
+  .avatar-circle{position:relative;overflow:hidden;}
 </style>
 </head>
 <body class="min-h-screen flex items-center justify-center">
 
-<!-- Demo controls — outside phone frame on desktop -->
+<!-- Demo controls — outside phone frame on desktop, above status bar on mobile -->
 <div class="demo-pill" id="demo-pill" onclick="toggleDemoMenu()">
-  <span>⋮</span> Demo
+  <span>☰</span> Demo Menu
 </div>
-<div id="demo-menu" style="display:none;position:fixed;top:50px;right:14px;z-index:100;background:#111;color:#fff;border-radius:12px;padding:8px;min-width:180px;box-shadow:0 8px 24px rgba(0,0,0,0.4);">
-  <button onclick="goTo(0);closeDemoMenu()" class="block w-full text-left px-3 py-2 hover:bg-gray-800 rounded text-xs">↺ Reset to Homepage</button>
-  <button onclick="goTo(3);closeDemoMenu()" class="block w-full text-left px-3 py-2 hover:bg-gray-800 rounded text-xs">⚡ Simulate trigger</button>
-  <button onclick="closeDemoMenu()" class="block w-full text-left px-3 py-2 hover:bg-gray-800 rounded text-xs text-gray-400">Close</button>
+<div id="demo-menu" style="display:none;position:fixed;top:50px;right:14px;z-index:100;background:#111;color:#fff;border-radius:12px;padding:8px;min-width:220px;box-shadow:0 8px 24px rgba(0,0,0,0.4);">
+  <div class="px-3 pt-1 pb-2 text-[10px] uppercase tracking-wider text-gray-400 font-semibold">Quick jump</div>
+  <button onclick="goTo(0);closeDemoMenu()" class="block w-full text-left px-3 py-1.5 hover:bg-gray-800 rounded text-xs">1 · Homepage</button>
+  <button onclick="goTo(1);closeDemoMenu()" class="block w-full text-left px-3 py-1.5 hover:bg-gray-800 rounded text-xs">2 · What brings you here?</button>
+  <button onclick="goTo(2);closeDemoMenu()" class="block w-full text-left px-3 py-1.5 hover:bg-gray-800 rounded text-xs">3 · TM Café browse</button>
+  <button onclick="goTo(3);closeDemoMenu()" class="block w-full text-left px-3 py-1.5 hover:bg-gray-800 rounded text-xs" style="background:#7C2D12;">⚡ 4 · Moment match trigger</button>
+  <button onclick="goTo(4);closeDemoMenu()" class="block w-full text-left px-3 py-1.5 hover:bg-gray-800 rounded text-xs">5 · Listeners for you</button>
+  <button onclick="goTo(6);closeDemoMenu()" class="block w-full text-left px-3 py-1.5 hover:bg-gray-800 rounded text-xs">6 · In-call audio</button>
+  <button onclick="goTo(7);closeDemoMenu()" class="block w-full text-left px-3 py-1.5 hover:bg-gray-800 rounded text-xs">7 · Session-end</button>
+  <button onclick="goTo(8);closeDemoMenu()" class="block w-full text-left px-3 py-1.5 hover:bg-gray-800 rounded text-xs">8 · Day-3 push + UPI</button>
+  <div class="border-t border-gray-700 mt-1 pt-1"></div>
+  <button onclick="closeDemoMenu()" class="block w-full text-left px-3 py-1.5 hover:bg-gray-800 rounded text-xs text-gray-400">Close</button>
 </div>
+
+<!-- Reusable TrulyMadly logo SVG (used as <use href="#tm-logo"/>) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="tm-logo" viewBox="0 0 100 100">
+    <defs>
+      <radialGradient id="tm-pink" cx="30%" cy="30%" r="80%">
+        <stop offset="0%" stop-color="#FF4DA6"/><stop offset="100%" stop-color="#E91E63"/>
+      </radialGradient>
+      <radialGradient id="tm-magenta" cx="70%" cy="40%" r="80%">
+        <stop offset="0%" stop-color="#D946EF"/><stop offset="100%" stop-color="#A21CAF"/>
+      </radialGradient>
+      <radialGradient id="tm-blue" cx="60%" cy="70%" r="80%">
+        <stop offset="0%" stop-color="#38BDF8"/><stop offset="100%" stop-color="#0EA5E9"/>
+      </radialGradient>
+      <radialGradient id="tm-purple" cx="40%" cy="70%" r="80%">
+        <stop offset="0%" stop-color="#F472B6"/><stop offset="100%" stop-color="#9333EA"/>
+      </radialGradient>
+    </defs>
+    <circle cx="38" cy="38" r="30" fill="url(#tm-pink)" opacity="0.9"/>
+    <circle cx="62" cy="38" r="30" fill="url(#tm-magenta)" opacity="0.85"/>
+    <circle cx="38" cy="62" r="30" fill="url(#tm-purple)" opacity="0.85"/>
+    <circle cx="62" cy="62" r="30" fill="url(#tm-blue)" opacity="0.85"/>
+    <text x="50" y="62" text-anchor="middle" font-family="Poppins,sans-serif" font-weight="800" font-size="36" fill="#fff">tm</text>
+  </symbol>
+</svg>
 
 <div class="phone-shell">
   <div class="notch"></div>
+
+  <!-- Frame Navigator overlay (opens when any TM logo is clicked) -->
+  <div class="frame-nav-overlay" id="frame-nav-overlay" onclick="closeFrameNav(event)">
+    <div class="frame-nav-panel" onclick="event.stopPropagation()">
+      <header>
+        <div class="flex items-center gap-2">
+          <svg width="22" height="22"><use href="#tm-logo"/></svg>
+          <div>
+            <div style="font-size:13px;font-weight:700;color:#111;">Jump to frame</div>
+            <div style="font-size:10px;color:#6B7280;">Demo navigator · 9 screens</div>
+          </div>
+        </div>
+        <button onclick="closeFrameNav()" style="background:#F3F4F6;border:none;width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:14px;color:#374151;">✕</button>
+      </header>
+      <div class="frame-nav-row" onclick="navJump(0)"><div class="frame-nav-num">1</div><div><div class="frame-nav-label">Homepage</div><div class="frame-nav-sub">TrulyMadly suggested · Café intro</div></div></div>
+      <div class="frame-nav-row" onclick="navJump(1)"><div class="frame-nav-num">2</div><div><div class="frame-nav-label">What brings you here?</div><div class="frame-nav-sub">Language + emotional state</div></div></div>
+      <div class="frame-nav-row" onclick="navJump(2)"><div class="frame-nav-num">3</div><div><div class="frame-nav-label">TM Café browse</div><div class="frame-nav-sub">All experts · price chips</div></div></div>
+      <div class="frame-nav-row" onclick="navJump(3)" style="background:#FFF7ED;"><div class="frame-nav-num" style="background:#F59E0B;color:#fff;">4</div><div><div class="frame-nav-label">⚡ Moment match trigger</div><div class="frame-nav-sub">Tough week? Niharika first 5 min free</div></div></div>
+      <div class="frame-nav-row" onclick="navJump(4)"><div class="frame-nav-num">5</div><div><div class="frame-nav-label">Listeners for you</div><div class="frame-nav-sub">Hand-picked · Tier 2 pricing</div></div></div>
+      <div class="frame-nav-row" onclick="navJump(6)"><div class="frame-nav-num">6</div><div><div class="frame-nav-label">In-call audio · ElevenLabs</div><div class="frame-nav-sub">Voice agent auto-starts on entry</div></div></div>
+      <div class="frame-nav-row" onclick="navJump(7)"><div class="frame-nav-num">7</div><div><div class="frame-nav-label">Session-end summary</div><div class="frame-nav-sub">Email opt-in · rebook</div></div></div>
+      <div class="frame-nav-row" onclick="navJump(8)"><div class="frame-nav-num">8</div><div><div class="frame-nav-label">Day-3 push + UPI recharge</div><div class="frame-nav-sub">PhonePe · GPay · Paytm</div></div></div>
+    </div>
+  </div>
+
   <div class="status-bar">
     <span>9:41</span>
     <div class="flex items-center gap-1.5">
@@ -100,8 +176,10 @@
   <div id="screen-0" class="screen active pink-gradient">
     <div class="px-5 pt-4 pb-2 flex items-center justify-between">
       <div class="flex items-center gap-2">
-        <div class="w-9 h-9 rounded-xl flex items-center justify-center" style="background:radial-gradient(circle at 30% 30%,#E91E63,#9333EA);"><span class="text-white font-bold text-sm">tm</span></div>
-        <span class="font-bold text-lg" style="color:#111;">TrulyMadly</span>
+        <button class="tm-logo-btn" onclick="openFrameNav()" title="Open frame navigator" aria-label="TrulyMadly menu">
+          <svg width="36" height="36"><use href="#tm-logo"/></svg>
+        </button>
+        <span class="font-bold text-lg cursor-pointer" style="color:#111;" onclick="openFrameNav()">TrulyMadly</span>
       </div>
       <div class="flex items-center gap-3">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
@@ -165,8 +243,8 @@
     <!-- Profile card -->
     <div class="px-4 pt-3">
       <div class="bg-white rounded-3xl card-shadow overflow-hidden">
-        <div class="relative h-72" style="background:linear-gradient(135deg,#FFB7C5 0%,#FF8AB3 100%);">
-          <div class="absolute inset-0 flex items-center justify-center text-7xl font-bold text-white/80">A</div>
+        <div class="relative h-72 overflow-hidden" style="background:linear-gradient(135deg,#FFB7C5 0%,#FF8AB3 100%);">
+          <img src="https://api.dicebear.com/7.x/lorelei/svg?seed=Ananya27&backgroundColor=ffb7c5&hair=variant08&earrings=variant03" alt="Ananya" style="width:100%;height:100%;object-fit:cover;"/>
           <div class="absolute top-3 left-3 flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-white text-xs font-semibold" style="background:linear-gradient(90deg,#9333EA,#E91E63);">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.5 4.5L18 8l-4.5 1.5L12 14l-1.5-4.5L6 8l4.5-1.5z"/></svg>
             Astro 92%
@@ -193,7 +271,7 @@
     </div>
 
     <div class="absolute bottom-4 left-4 right-4 nav-pill flex items-center justify-around py-2.5 px-3">
-      <div class="flex flex-col items-center gap-0.5"><div class="w-7 h-7 rounded-md bg-pink-100 flex items-center justify-center"><span class="text-pink-600 text-xs font-bold">tm</span></div><span class="text-[10px] font-semibold text-gray-900">Suggested</span></div>
+      <div class="flex flex-col items-center gap-0.5 cursor-pointer" onclick="openFrameNav()"><svg width="22" height="22"><use href="#tm-logo"/></svg><span class="text-[10px] font-semibold text-gray-900">Suggested</span></div>
       <div class="flex flex-col items-center gap-0.5 opacity-60"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#374151" stroke-width="2"><path d="M12 21s-7-4.5-9.5-9C0.5 8 3 4 7 4c2 0 3.5 1 5 3 1.5-2 3-3 5-3 4 0 6.5 4 4.5 8C19 16.5 12 21 12 21z"/></svg><span class="text-[10px] font-medium text-gray-700">Likes You</span></div>
       <div class="flex flex-col items-center gap-0.5 opacity-60 relative"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#374151" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span class="text-[10px] font-medium text-gray-700">Chat</span><div class="absolute -top-1 right-2 dot-red"></div></div>
       <div class="flex flex-col items-center gap-0.5 opacity-60"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#374151" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg><span class="text-[10px] font-medium text-gray-700">Me</span></div>
@@ -289,8 +367,8 @@
       <!-- Niharika (replaces Akruti) -->
       <div class="bg-white rounded-3xl card-shadow p-4">
         <div class="flex items-start gap-3">
-          <div class="w-16 h-16 rounded-full ring-green flex-shrink-0" style="background:linear-gradient(135deg,#FB923C,#F97316);display:flex;align-items:center;justify-content:center;">
-            <span class="text-white text-xl font-bold">N</span>
+          <div class="w-16 h-16 rounded-full ring-green flex-shrink-0 avatar-circle" style="background:linear-gradient(135deg,#FB923C,#F97316);">
+            <img class="avatar-img" src="https://api.dicebear.com/7.x/lorelei/svg?seed=Niharika&backgroundColor=fb923c&hair=variant05&earrings=variant03" alt="Niharika"/>
           </div>
           <div class="flex-1">
             <div class="flex items-center gap-2"><span class="text-lg font-bold">Niharika</span><span class="verified-tick">✓</span></div>
@@ -315,8 +393,8 @@
       <!-- Vrushali -->
       <div class="bg-white rounded-3xl card-shadow p-4">
         <div class="flex items-start gap-3">
-          <div class="w-16 h-16 rounded-full ring-green flex-shrink-0" style="background:linear-gradient(135deg,#F59E0B,#FB923C);display:flex;align-items:center;justify-content:center;">
-            <span class="text-white text-xl font-bold">V</span>
+          <div class="w-16 h-16 rounded-full ring-green flex-shrink-0 avatar-circle" style="background:linear-gradient(135deg,#F59E0B,#FB923C);">
+            <img class="avatar-img" src="https://api.dicebear.com/7.x/lorelei/svg?seed=Vrushali&backgroundColor=fcd34d&hair=variant02&earrings=variant01" alt="Vrushali"/>
           </div>
           <div class="flex-1">
             <div class="flex items-center gap-2"><span class="text-lg font-bold">Vrushali</span><span class="verified-tick">✓</span></div>
@@ -337,8 +415,8 @@
       <!-- Mauli -->
       <div class="bg-white rounded-3xl card-shadow p-4">
         <div class="flex items-start gap-3">
-          <div class="w-16 h-16 rounded-full ring-green flex-shrink-0" style="background:linear-gradient(135deg,#10B981,#059669);display:flex;align-items:center;justify-content:center;">
-            <span class="text-white text-xl font-bold">M</span>
+          <div class="w-16 h-16 rounded-full ring-green flex-shrink-0 avatar-circle" style="background:linear-gradient(135deg,#10B981,#059669);">
+            <img class="avatar-img" src="https://api.dicebear.com/7.x/lorelei/svg?seed=Mauli&backgroundColor=a7f3d0&hair=variant04&earrings=variant02" alt="Mauli"/>
           </div>
           <div class="flex-1">
             <div class="flex items-center gap-2"><span class="text-lg font-bold">Mauli</span><span class="verified-tick">✓</span></div>
@@ -376,7 +454,7 @@
         <button class="green-pill text-white text-xs font-semibold px-3 py-1.5 rounded-full">Claim</button>
       </div>
       <div class="nav-pill flex items-center justify-around py-2.5 px-3">
-        <div onclick="goTo(0)" class="flex flex-col items-center gap-0.5 opacity-60 cursor-pointer"><span class="text-gray-700 text-xs font-bold">tm</span><span class="text-[10px] font-medium text-gray-700">Suggested</span></div>
+        <div onclick="goTo(0)" class="flex flex-col items-center gap-0.5 cursor-pointer"><svg width="22" height="22"><use href="#tm-logo"/></svg><span class="text-[10px] font-medium text-gray-700">Suggested</span></div>
         <div class="flex flex-col items-center gap-0.5 opacity-60"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#374151" stroke-width="2"><path d="M12 21s-7-4.5-9.5-9C0.5 8 3 4 7 4c2 0 3.5 1 5 3 1.5-2 3-3 5-3 4 0 6.5 4 4.5 8C19 16.5 12 21 12 21z"/></svg><span class="text-[10px] font-medium text-gray-700">Likes You</span></div>
         <div class="flex flex-col items-center gap-0.5 opacity-60"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#374151" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span class="text-[10px] font-medium text-gray-700">Chat</span></div>
         <div class="flex flex-col items-center gap-0.5 opacity-60"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#374151" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg><span class="text-[10px] font-medium text-gray-700">Me</span></div>
@@ -392,8 +470,10 @@
   <div id="screen-3" class="screen pink-gradient">
     <div class="px-5 pt-4 pb-2 flex items-center justify-between">
       <div class="flex items-center gap-2">
-        <div class="w-9 h-9 rounded-xl flex items-center justify-center" style="background:radial-gradient(circle at 30% 30%,#E91E63,#9333EA);"><span class="text-white font-bold text-sm">tm</span></div>
-        <span class="font-bold text-lg" style="color:#111;">TrulyMadly</span>
+        <button class="tm-logo-btn" onclick="openFrameNav()" title="Open frame navigator" aria-label="TrulyMadly menu">
+          <svg width="36" height="36"><use href="#tm-logo"/></svg>
+        </button>
+        <span class="font-bold text-lg cursor-pointer" style="color:#111;" onclick="openFrameNav()">TrulyMadly</span>
       </div>
       <div class="flex items-center gap-2">
         <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded-full" style="background:#FCE4EC;color:#E91E63;">⚡ Moment match</span>
@@ -418,7 +498,7 @@
           <div class="text-xl font-bold text-gray-900 leading-snug">Tough week? You don't have to sit with it alone.</div>
           <div class="text-sm text-gray-600 mt-2 leading-relaxed">Niharika has walked <span class="font-semibold text-gray-800">200+ people</span> through breakups. <span class="font-semibold text-green-700">First 5 min free.</span></div>
           <div class="flex items-center gap-3 mt-4 pt-4 border-t border-gray-100">
-            <div class="w-12 h-12 rounded-full ring-green flex-shrink-0" style="background:linear-gradient(135deg,#FB923C,#F97316);display:flex;align-items:center;justify-content:center;"><span class="text-white font-bold">N</span></div>
+            <div class="w-12 h-12 rounded-full ring-green flex-shrink-0 avatar-circle" style="background:linear-gradient(135deg,#FB923C,#F97316);"><img class="avatar-img" src="https://api.dicebear.com/7.x/lorelei/svg?seed=Niharika&backgroundColor=fb923c&hair=variant05&earrings=variant03" alt="Niharika"/></div>
             <div class="flex-1">
               <div class="flex items-center gap-1.5 text-sm font-semibold text-gray-900">Niharika <span class="verified-tick" style="width:14px;height:14px;font-size:9px;">✓</span></div>
               <div class="text-xs text-gray-600 mt-0.5">4.9 (412) · Listener · <span class="text-pink-600 font-semibold">Breakup recovery</span></div>
@@ -441,9 +521,10 @@
     </div>
 
     <div class="absolute bottom-4 left-4 right-4 nav-pill flex items-center justify-around py-2.5 px-3">
-      <div class="flex flex-col items-center gap-0.5"><div class="w-7 h-7 rounded-md bg-pink-100 flex items-center justify-center"><span class="text-pink-600 text-xs font-bold">tm</span></div><span class="text-[10px] font-semibold text-gray-900">Suggested</span></div>
+      <div onclick="goTo(0)" class="flex flex-col items-center gap-0.5 cursor-pointer"><svg width="22" height="22"><use href="#tm-logo"/></svg><span class="text-[10px] font-semibold text-gray-900">Suggested</span></div>
       <div class="flex flex-col items-center gap-0.5 opacity-60"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#374151" stroke-width="2"><path d="M12 21s-7-4.5-9.5-9C0.5 8 3 4 7 4c2 0 3.5 1 5 3 1.5-2 3-3 5-3 4 0 6.5 4 4.5 8C19 16.5 12 21 12 21z"/></svg><span class="text-[10px] font-medium text-gray-700">Likes You</span></div>
       <div class="flex flex-col items-center gap-0.5 opacity-60"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#374151" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span class="text-[10px] font-medium text-gray-700">Chat</span></div>
+      <div class="flex flex-col items-center gap-0.5 opacity-60"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#374151" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg><span class="text-[10px] font-medium text-gray-700">Me</span></div>
       <div onclick="goTo(2)" class="flex flex-col items-center gap-0.5 relative cursor-pointer">
         <div class="w-7 h-7 rounded-full flex items-center justify-center" style="background:linear-gradient(135deg,#E91E63,#9333EA);"><span class="text-white text-[10px] font-bold italic">Café</span></div>
         <span class="text-[10px] font-semibold" style="color:#9333EA;">Café</span>
@@ -473,7 +554,7 @@
       <div class="bg-white rounded-3xl card-shadow p-4 relative" style="border:2px solid #FCD34D;">
         <div class="absolute -top-3 left-3 px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider text-white" style="background:#F59E0B;">⭐ BEST MATCH</div>
         <div class="flex items-start gap-3 mt-1">
-          <div class="w-16 h-16 rounded-full ring-green flex-shrink-0" style="background:linear-gradient(135deg,#FB923C,#F97316);display:flex;align-items:center;justify-content:center;"><span class="text-white text-xl font-bold">N</span></div>
+          <div class="w-16 h-16 rounded-full ring-green flex-shrink-0 avatar-circle" style="background:linear-gradient(135deg,#FB923C,#F97316);"><img class="avatar-img" src="https://api.dicebear.com/7.x/lorelei/svg?seed=Niharika&backgroundColor=fb923c&hair=variant05&earrings=variant03" alt="Niharika"/></div>
           <div class="flex-1">
             <div class="flex items-center gap-2"><span class="text-lg font-bold">Niharika</span><span class="verified-tick">✓</span></div>
             <div class="flex items-center gap-1.5 mt-1 text-xs text-gray-700">
@@ -497,7 +578,7 @@
       <!-- Khyati -->
       <div class="bg-white rounded-3xl card-shadow p-4">
         <div class="flex items-start gap-3">
-          <div class="w-14 h-14 rounded-full ring-green flex-shrink-0" style="background:linear-gradient(135deg,#A78BFA,#8B5CF6);display:flex;align-items:center;justify-content:center;"><span class="text-white text-lg font-bold">K</span></div>
+          <div class="w-14 h-14 rounded-full ring-green flex-shrink-0 avatar-circle" style="background:linear-gradient(135deg,#A78BFA,#8B5CF6);"><img class="avatar-img" src="https://api.dicebear.com/7.x/lorelei/svg?seed=Khyati&backgroundColor=ddd6fe&hair=variant07&earrings=variant04" alt="Khyati"/></div>
           <div class="flex-1">
             <div class="flex items-center gap-2"><span class="text-base font-bold">Khyati</span><span class="verified-tick">✓</span></div>
             <div class="flex items-center gap-1.5 mt-1 text-xs text-gray-700">
@@ -513,7 +594,7 @@
       <!-- Riya -->
       <div class="bg-white rounded-3xl card-shadow p-4">
         <div class="flex items-start gap-3">
-          <div class="w-14 h-14 rounded-full ring-green flex-shrink-0" style="background:linear-gradient(135deg,#34D399,#10B981);display:flex;align-items:center;justify-content:center;"><span class="text-white text-lg font-bold">R</span></div>
+          <div class="w-14 h-14 rounded-full ring-green flex-shrink-0 avatar-circle" style="background:linear-gradient(135deg,#34D399,#10B981);"><img class="avatar-img" src="https://api.dicebear.com/7.x/lorelei/svg?seed=Riya&backgroundColor=a7f3d0&hair=variant09&earrings=variant05" alt="Riya"/></div>
           <div class="flex-1">
             <div class="flex items-center gap-2"><span class="text-base font-bold">Riya</span><span class="verified-tick">✓</span></div>
             <div class="flex items-center gap-1.5 mt-1 text-xs text-gray-700">
@@ -544,8 +625,8 @@
       <div class="relative flex items-center justify-center mb-6" style="width:200px;height:200px;">
         <div class="ring-pulse" style="width:200px;height:200px;"></div>
         <div class="ring-pulse" style="width:200px;height:200px;animation-delay:0.8s;"></div>
-        <div class="w-40 h-40 rounded-full" style="background:linear-gradient(135deg,#FB923C,#F97316);display:flex;align-items:center;justify-content:center;box-shadow:0 0 60px rgba(251,146,60,0.5);">
-          <span class="text-white text-6xl font-bold">N</span>
+        <div class="w-40 h-40 rounded-full avatar-circle" style="background:linear-gradient(135deg,#FB923C,#F97316);box-shadow:0 0 60px rgba(251,146,60,0.5);">
+          <img class="avatar-img" src="https://api.dicebear.com/7.x/lorelei/svg?seed=Niharika&backgroundColor=fb923c&hair=variant05&earrings=variant03" alt="Niharika"/>
         </div>
       </div>
       <div class="text-2xl font-bold flex items-center gap-2">Niharika <span class="verified-tick">✓</span></div>
@@ -571,9 +652,9 @@
         <div class="text-xs text-white/60 italic">"Take your time. There's nothing you can say here that will surprise me."</div>
       </div>
 
-      <!-- ElevenLabs widget will appear floating in bottom-right (its default position) -->
+      <!-- ElevenLabs widget mounts INSIDE the phone-shell (.eleven-wrapper) -->
       <div class="mt-6 text-center">
-        <div class="text-xs text-white/40 mb-2">↓ Tap the mic widget to start the call</div>
+        <div class="text-xs text-white/50 mb-1">⚡ Connecting you to Niharika…</div>
         <div class="text-[10px] text-white/30">Audio is end-to-end private · Powered by ElevenLabs</div>
       </div>
     </div>
@@ -622,7 +703,7 @@
 
       <div class="bg-white rounded-2xl card-shadow p-4 mb-3">
         <div class="flex items-center gap-3 mb-3">
-          <div class="w-12 h-12 rounded-full ring-green flex-shrink-0" style="background:linear-gradient(135deg,#FB923C,#F97316);display:flex;align-items:center;justify-content:center;"><span class="text-white font-bold">N</span></div>
+          <div class="w-12 h-12 rounded-full ring-green flex-shrink-0 avatar-circle" style="background:linear-gradient(135deg,#FB923C,#F97316);"><img class="avatar-img" src="https://api.dicebear.com/7.x/lorelei/svg?seed=Niharika&backgroundColor=fb923c&hair=variant05&earrings=variant03" alt="Niharika"/></div>
           <div class="flex-1">
             <div class="font-semibold text-sm text-gray-900">Niharika is here when you're ready</div>
             <div class="text-xs text-gray-500">Same Listener, no re-explaining</div>
@@ -633,7 +714,7 @@
 
       <div class="bg-pink-50 rounded-2xl p-4 mb-3">
         <div class="flex items-center gap-3 mb-2">
-          <div class="w-12 h-12 rounded-full flex-shrink-0" style="background:linear-gradient(135deg,#A78BFA,#8B5CF6);display:flex;align-items:center;justify-content:center;"><span class="text-white font-bold">E</span></div>
+          <div class="w-12 h-12 rounded-full flex-shrink-0 avatar-circle" style="background:linear-gradient(135deg,#A78BFA,#8B5CF6);"><img class="avatar-img" src="https://api.dicebear.com/7.x/lorelei/svg?seed=EvaCoach&backgroundColor=ddd6fe&hair=variant10&earrings=variant02" alt="Eva"/></div>
           <div class="flex-1">
             <div class="font-semibold text-sm text-gray-900">Try a Coach next week</div>
             <div class="text-xs text-gray-500">Eva helps with what comes after the grief</div>
@@ -668,7 +749,7 @@
     <div id="upi-sheet" class="upi-sheet absolute bottom-0 left-0 right-0 bg-white rounded-t-3xl z-50 px-5 pt-4 pb-6 open" style="box-shadow:0 -10px 40px rgba(0,0,0,0.12);">
       <div class="w-12 h-1.5 bg-gray-300 rounded-full mx-auto mb-4"></div>
       <div class="flex items-center gap-3 mb-4">
-        <div class="w-12 h-12 rounded-full ring-green flex-shrink-0" style="background:linear-gradient(135deg,#FB923C,#F97316);display:flex;align-items:center;justify-content:center;"><span class="text-white font-bold">N</span></div>
+        <div class="w-12 h-12 rounded-full ring-green flex-shrink-0 avatar-circle" style="background:linear-gradient(135deg,#FB923C,#F97316);"><img class="avatar-img" src="https://api.dicebear.com/7.x/lorelei/svg?seed=Niharika&backgroundColor=fb923c&hair=variant05&earrings=variant03" alt="Niharika"/></div>
         <div class="flex-1">
           <div class="text-sm font-semibold text-gray-900">Recharge to talk to Niharika</div>
           <div class="text-xs text-gray-500">9:00 pm slot held · 5 mins left</div>
@@ -810,13 +891,29 @@
   }
 
   // ============================================================
-  // ElevenLabs widget — mount/unmount based on route
+  // Frame Navigator (opened via TrulyMadly logo)
+  // ============================================================
+  function openFrameNav(){
+    document.getElementById('frame-nav-overlay').classList.add('open');
+  }
+  function closeFrameNav(e){
+    // Backdrop click only closes if the click hits the overlay itself, not the panel
+    if(e && e.type === 'click' && e.target && !e.target.classList.contains('frame-nav-overlay')) return;
+    document.getElementById('frame-nav-overlay').classList.remove('open');
+  }
+  function navJump(n){
+    document.getElementById('frame-nav-overlay').classList.remove('open');
+    goTo(n);
+  }
+
+  // ============================================================
+  // ElevenLabs widget — mount INSIDE phone-shell + auto-start session
   // ============================================================
   const ELEVENLABS_AGENT_ID = 'agent_8401kqzfx7n9ev78hx24a0gyy9g4';
   let elevenLabsScriptLoaded = false;
 
   function mountElevenLabsWidget(){
-    // Load the script once
+    // Load the convai script once
     if(!elevenLabsScriptLoaded){
       const script = document.createElement('script');
       script.src = 'https://elevenlabs.io/convai-widget/index.js';
@@ -825,28 +922,51 @@
       document.body.appendChild(script);
       elevenLabsScriptLoaded = true;
     }
-    // Create the widget element if not already present
-    let widget = document.querySelector('elevenlabs-convai');
-    if(!widget){
-      widget = document.createElement('elevenlabs-convai');
+    // Mount the widget INSIDE the phone-shell so it stays within the device frame
+    const phoneShell = document.querySelector('.phone-shell');
+    let wrapper = document.querySelector('.eleven-wrapper');
+    if(!wrapper){
+      wrapper = document.createElement('div');
+      wrapper.className = 'eleven-wrapper';
+      const widget = document.createElement('elevenlabs-convai');
       widget.setAttribute('agent-id', ELEVENLABS_AGENT_ID);
-      document.body.appendChild(widget);
+      wrapper.appendChild(widget);
+      phoneShell.appendChild(wrapper);
+
+      // Auto-start the session — the user-gesture context from the
+      // Audio / Call Now click satisfies the browser autoplay policy.
+      const tryStart = (attempt) => {
+        const w = document.querySelector('elevenlabs-convai');
+        if(!w){ if(attempt<20) setTimeout(()=>tryStart(attempt+1), 250); return; }
+        try {
+          if(typeof w.startSession === 'function'){ w.startSession(); return; }
+          // Fallback: programmatically click the widget's call button once it renders
+          const root = w.shadowRoot;
+          if(root){
+            const btn = root.querySelector('button');
+            if(btn){ btn.click(); return; }
+          }
+        } catch(e){}
+        if(attempt<20) setTimeout(()=>tryStart(attempt+1), 250);
+      };
+      setTimeout(()=>tryStart(0), 500);
     }
   }
 
   function unmountElevenLabsWidget(){
     const widget = document.querySelector('elevenlabs-convai');
     if(widget){
-      // Try to end any active session
-      try {
-        if(typeof widget.endSession === 'function') widget.endSession();
-      } catch(e){}
-      widget.remove();
+      try { if(typeof widget.endSession === 'function') widget.endSession(); } catch(e){}
     }
+    const wrapper = document.querySelector('.eleven-wrapper');
+    if(wrapper) wrapper.remove();
   }
 
   document.addEventListener('keydown',(e)=>{
-    if(e.key==='Escape'){goTo(0);closeDemoMenu();}
+    if(e.key==='Escape'){
+      closeFrameNav();
+      closeDemoMenu();
+    }
   });
 </script>
 </body>
