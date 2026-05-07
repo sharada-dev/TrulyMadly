@@ -31,7 +31,8 @@
   }
   .notch{position:absolute;top:8px;left:50%;transform:translateX(-50%);width:120px;height:32px;background:#000;border-radius:20px;z-index:60;}
   .status-bar{position:absolute;top:0;left:0;right:0;height:50px;display:flex;align-items:center;justify-content:space-between;padding:14px 28px 0 28px;font-size:15px;font-weight:600;color:#111;z-index:50;}
-  .screen{position:absolute;inset:0;padding-top:50px;display:none;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;}
+  .screen{position:absolute;inset:0;padding-top:50px;padding-bottom:90px;display:none;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;}
+  .screen.no-bottom-pad{padding-bottom:0!important;}
   .screen.active{display:block;}
   .screen::-webkit-scrollbar{display:none;}
   .pink-gradient{background:linear-gradient(180deg,#FBD9E5 0%,#FCE4EC 30%,#FFF0F5 80%);}
@@ -644,7 +645,7 @@
   </div>
 
   <!-- =========================================================== FRAME 8 — Day-3 push + UPI =========================================================== -->
-  <div id="screen-8" class="screen pink-gradient">
+  <div id="screen-8" class="screen pink-gradient no-bottom-pad">
     <div id="push-banner" class="absolute top-12 left-3 right-3 ios-banner p-3 z-40 push-banner" onclick="dismissPush()">
       <div class="flex items-start gap-3">
         <div class="w-8 h-8 rounded-md flex items-center justify-center flex-shrink-0" style="background:linear-gradient(135deg,#E91E63,#9333EA);"><span class="text-white text-[10px] font-bold italic">Café</span></div>
