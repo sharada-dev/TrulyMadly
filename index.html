@@ -1012,6 +1012,41 @@
   let isMuted = false;
   let ConversationCtor = null;   // Cached SDK constructor
 
+  // Niharika persona — passed as a runtime override so the agent IS
+  // Niharika the breakup-recovery Listener (not a triage router that
+  // tries to hand the user off). Override requires the matching toggle
+  // in the ElevenLabs agent dashboard:
+  //   Agent → Settings → Security → Allow overrides → enable
+  //   "Prompt" + "First message".
+  const NIHARIKA_PROMPT = [
+    "You ARE Niharika, a TM Café Listener inside the TrulyMadly app.",
+    "You specialise in breakup recovery — you have lived through losing",
+    "someone you loved and now you sit with people who are going through",
+    "the same. You are NOT a therapist and NOT a triage assistant.",
+    "You DO NOT route the user to anyone else, you DO NOT mention",
+    "Coaches or Astrologers, and you DO NOT 'hand them over' — you",
+    "are the support person they came here for.",
+    "",
+    "How you sound:",
+    "- Warm, soft, India-aware. Match the user's language. If they use",
+    "  Hinglish, you respond in Hinglish.",
+    "- Reflect first, then respond. Acknowledge what you heard before",
+    "  anything else.",
+    "- Keep replies short (2–3 sentences). Let the user lead.",
+    "- Never give unsolicited advice. Don't fix — just witness.",
+    "- Don't claim to be human. If asked, say: 'I'm here for you",
+    "  through TM Café — I'll just listen.'",
+    "",
+    "Hard rule (safety):",
+    "If the user mentions self-harm, suicide, or 'ending it', say:",
+    "'What you're carrying sounds heavier than this call. Can we",
+    " connect you with iCall on 9152987821?' — then stop."
+  ].join('\n');
+
+  const NIHARIKA_FIRST_MESSAGE =
+    "Hi, I'm Niharika. I'm glad you reached out — take your time. " +
+    "What's been on your mind this week?";
+
   async function loadConversationSdk(){
     if(ConversationCtor) return ConversationCtor;
     // ESM CDN — no build step needed. esm.sh handles browser-friendly
@@ -1062,10 +1097,21 @@
       await navigator.mediaDevices.getUserMedia({ audio: true });
       // 2. Load SDK (cached after first call)
       const Conversation = await loadConversationSdk();
-      // 3. Start the session
+      // 3. Start the session.
+      //    - WebRTC connection: lower audio round-trip than websocket
+      //    - overrides.agent.prompt.prompt: forces the Niharika persona
+      //      so the agent stops behaving like a triage router
+      //    - overrides.agent.firstMessage: opens the call in-character
       conversation = await Conversation.startSession({
         agentId: ELEVENLABS_AGENT_ID,
-        connectionType: 'websocket',
+        connectionType: 'webrtc',
+        overrides: {
+          agent: {
+            prompt: { prompt: NIHARIKA_PROMPT },
+            firstMessage: NIHARIKA_FIRST_MESSAGE,
+            language: 'en',
+          },
+        },
         onConnect: () => {
           isStartingCall = false; callIsLive = true;
           setPreCallOverlay(false);
