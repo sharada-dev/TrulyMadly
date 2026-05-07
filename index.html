@@ -1097,21 +1097,13 @@
       await navigator.mediaDevices.getUserMedia({ audio: true });
       // 2. Load SDK (cached after first call)
       const Conversation = await loadConversationSdk();
-      // 3. Start the session.
-      //    - WebRTC connection: lower audio round-trip than websocket
-      //    - overrides.agent.prompt.prompt: forces the Niharika persona
-      //      so the agent stops behaving like a triage router
-      //    - overrides.agent.firstMessage: opens the call in-character
+      // 3. Start the session — exact pattern from the working Lovable
+      //    reference. WebSocket + no overrides. The Niharika persona
+      //    must be configured on the ElevenLabs agent dashboard
+      //    directly (see NIHARIKA_PROMPT above for the text to paste).
       conversation = await Conversation.startSession({
         agentId: ELEVENLABS_AGENT_ID,
-        connectionType: 'webrtc',
-        overrides: {
-          agent: {
-            prompt: { prompt: NIHARIKA_PROMPT },
-            firstMessage: NIHARIKA_FIRST_MESSAGE,
-            language: 'en',
-          },
-        },
+        connectionType: 'websocket',
         onConnect: () => {
           isStartingCall = false; callIsLive = true;
           setPreCallOverlay(false);
