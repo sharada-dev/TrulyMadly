@@ -92,6 +92,9 @@
   .call-deck{
     position:absolute;left:16px;right:16px;bottom:24px;
     z-index:55;display:flex;flex-direction:column;gap:12px;
+    /* Cap the deck so a tall widget popup (T&C modal, helpful prompt)
+       doesn't bleed over the content above. */
+    max-height:280px;
   }
   .call-deck-row{
     display:flex;align-items:center;gap:10px;
@@ -102,6 +105,7 @@
     border-radius:22px;
     padding:8px 10px;
     box-shadow:0 10px 30px rgba(0,0,0,0.35);
+    max-height:260px;overflow:hidden;
   }
   .eleven-wrapper{
     flex:1;min-width:0;display:flex;justify-content:center;
@@ -714,21 +718,21 @@
         <div class="text-xs text-white/60 italic">"Take your time. There's nothing you can say here that will surprise me."</div>
       </div>
 
-      <!-- (Status pill + widget + end-call button live together in the
-           .call-deck below — keeps everything in one cohesive surface.) -->
-      <div class="mt-3 text-center">
-        <div class="text-[10px] text-white/30">Audio is end-to-end private</div>
-      </div>
-    </div>
-
-    <!-- Unified glass control deck: status pill on top, widget + end button in a single row -->
-    <div class="call-deck">
-      <div class="text-center">
+      <!-- Status pill lives in the content flow (NOT inside the .call-deck)
+           so a growing widget — e.g. when the T&C modal expands — never
+           overlaps it. -->
+      <div class="mt-4 flex flex-col items-center gap-1.5">
         <div class="call-status-pill" id="call-status">
           <span class="live-dot"></span>
           <span id="call-status-text">Tap “Start a call” to talk to Niharika</span>
         </div>
+        <div class="text-[10px] text-white/30">Audio is end-to-end private</div>
       </div>
+    </div>
+
+    <!-- Glass control deck — only the widget + end button. Status pill
+         is rendered above in content flow (see the section right above). -->
+    <div class="call-deck">
       <div class="call-deck-row">
         <div class="eleven-wrapper" id="eleven-mount"></div>
         <button class="end-call-btn" onclick="endCall()" title="End call &amp; see summary">
@@ -988,6 +992,7 @@
   // ============================================================
   const ELEVENLABS_AGENT_ID = 'agent_8401kqzfx7n9ev78hx24a0gyy9g4';
   let elevenLabsScriptLoaded = false;
+  let callStatePollId = null;
 
   function setCallStatus(text, color){
     const el = document.getElementById('call-status-text');
@@ -1057,35 +1062,69 @@
       };
       setTimeout(()=>trySdkStart(0), 600);
 
-      // Listen for widget session events — keep the green pill in sync
-      // and auto-navigate to the session-end screen when the widget
-      // session terminates (so the user only ever needs ONE end-call
-      // tap whether they hit our red button or the widget's own).
+      // Listen for the widget's own session events under several
+      // possible names (the public API name has shifted across
+      // versions — listening to all of them is harmless if not emitted).
       const widgetEl = mountSlot.querySelector('elevenlabs-convai');
       if(widgetEl){
-        widgetEl.addEventListener('convai-session-started', () =>
-          setCallStatus('Niharika is here · live', 'green'));
-        widgetEl.addEventListener('convai-session-ended', () => {
+        const STARTED = ['convai-session-started','call-start','session-started','el-call-start'];
+        const ENDED   = ['convai-session-ended','call-end','session-ended','el-call-end'];
+        STARTED.forEach(evt => widgetEl.addEventListener(evt, () =>
+          setCallStatus('Niharika is here · live', 'green')));
+        ENDED.forEach(evt => widgetEl.addEventListener(evt, () => {
           setCallStatus('Call ended', 'red');
-          // Brief pause so the user sees the "Call ended" pill, then
-          // glide to the session-end summary screen.
-          setTimeout(() => { if(current === 6) goTo(7); }, 800);
-        });
-        widgetEl.addEventListener('convai-error', (e) => {
+          setTimeout(() => { if(current === 6) goTo(7); }, 1000);
+        }));
+        widgetEl.addEventListener('error', (e) => {
           console.warn('convai error', e);
           setCallStatus('Audio error — try Chrome / allow mic', 'red');
         });
       }
+
+      // Belt-and-braces: poll the widget DOM for visible-state cues
+      // so the pill + auto-navigate work even if no event ever fires.
+      // (ElevenLabs ConvAI's shadow DOM is sometimes closed; we walk
+      // both the light DOM and accessible shadow DOM.)
+      let lastDetected = 'idle';
+      callStatePollId = setInterval(() => {
+        if(current !== 6){ clearInterval(callStatePollId); callStatePollId=null; return; }
+        const w = document.querySelector('elevenlabs-convai');
+        if(!w) return;
+        let text = '';
+        try { text = (w.shadowRoot ? w.shadowRoot.textContent : '') || w.textContent || ''; }
+        catch(e){}
+        const t = text.toLowerCase();
+        let state = 'idle';
+        if(t.includes('was the call helpful') || t.includes('rate this conversation')) state = 'ended';
+        else if(t.includes('end call')) state = 'live';
+        else if(t.includes('listening') || t.includes('speaking')) state = 'live';
+        else if(t.includes('start the call') || t.includes('start a call') || t.includes("hi, i'm")) state = 'idle';
+        else if(t.includes('terms') && t.includes('agree')) state = 'consent';
+
+        if(state === lastDetected) return;
+        lastDetected = state;
+        if(state === 'live'){
+          setCallStatus('Niharika is here · live', 'green');
+        } else if(state === 'ended'){
+          setCallStatus('Call ended', 'red');
+          setTimeout(() => { if(current === 6) goTo(7); }, 1200);
+        } else if(state === 'consent'){
+          setCallStatus('One-time consent — tap Agree to continue', 'green');
+        } else if(state === 'idle'){
+          setCallStatus('Tap “Start a call” to talk to Niharika', 'green');
+        }
+      }, 700);
     }
   }
 
   function unmountElevenLabsWidget(){
+    if(callStatePollId){ clearInterval(callStatePollId); callStatePollId = null; }
     const widget = document.querySelector('elevenlabs-convai');
     if(widget){
       try { if(typeof widget.endSession === 'function') widget.endSession(); } catch(e){}
       widget.remove();
     }
-    setCallStatus('Connecting to Niharika…', 'green');
+    setCallStatus('Tap “Start a call” to talk to Niharika', 'green');
   }
 
   document.addEventListener('keydown',(e)=>{
