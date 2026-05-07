@@ -84,25 +84,44 @@
   .frame-nav-num{width:26px;height:26px;border-radius:50%;background:#FCE4EC;color:#E91E63;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
   .frame-nav-label{font-size:13px;color:#111;font-weight:600;}
   .frame-nav-sub{font-size:10.5px;color:#6B7280;margin-top:1px;}
-  /* ElevenLabs widget — visible inside phone-shell on Frame 6 so it
-     can actually establish the audio session and request mic permission.
-     Positioned in the empty space above our 3-control row, sized small
-     so it feels like a chip rather than a popup card. */
+  /* ElevenLabs widget — lives inside the in-call "glass control deck"
+     at the bottom so it reads as part of our UI, not a popup. The
+     widget keeps its native white card (shadow DOM is closed, can't
+     restyle internals) but the dark glass frame around it ties it
+     visually to the rest of the dark in-call screen. */
+  .call-deck{
+    position:absolute;left:16px;right:16px;bottom:24px;
+    z-index:55;display:flex;flex-direction:column;gap:12px;
+  }
+  .call-deck-row{
+    display:flex;align-items:center;gap:10px;
+    background:rgba(255,255,255,0.06);
+    backdrop-filter:blur(18px);
+    -webkit-backdrop-filter:blur(18px);
+    border:1px solid rgba(255,255,255,0.10);
+    border-radius:22px;
+    padding:8px 10px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.35);
+  }
   .eleven-wrapper{
-    position:absolute;
-    bottom:88px;left:50%;
-    transform:translateX(-50%) scale(0.85);
-    transform-origin:center bottom;
-    z-index:55;
+    flex:1;min-width:0;display:flex;justify-content:center;
+    /* slight scale so widget visually fits the deck */
+    --tm-widget-scale:0.92;
   }
   elevenlabs-convai{
     position:relative!important;display:block;
-    /* Soften the widget chrome to match dark theme */
-    --el-button-bg:#22C55E;
-    --el-button-color:#fff;
-    --el-bg:#1F2937;
-    --el-text:#fff;
+    transform:scale(var(--tm-widget-scale));
+    transform-origin:center;
   }
+  .end-call-btn{
+    flex:0 0 auto;width:52px;height:52px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    background:#EF4444;border:none;cursor:pointer;
+    box-shadow:0 6px 18px rgba(239,68,68,0.45);
+    transition:transform 0.12s;
+  }
+  .end-call-btn:hover{transform:scale(1.05);}
+  .end-call-btn:active{transform:scale(0.95);}
   /* Status pill that replaces the widget — narrates session state. */
   .call-status-pill{
     display:inline-flex;align-items:center;gap:8px;
@@ -220,8 +239,26 @@
       </div>
     </div>
 
-    <!-- Café Intro Hero -->
+    <!-- Moment-Match demo banner — entry point to Frame 4
+         (in production this card appears spontaneously when the
+         engine detects a status-change + Sunday 9pm signal). -->
     <div class="px-4 pt-2">
+      <button onclick="goTo(3)"
+              class="w-full bg-white rounded-2xl card-shadow flex items-center gap-3 px-3 py-2.5 text-left"
+              style="border:1.5px dashed #E91E63;">
+        <div class="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0" style="background:linear-gradient(135deg,#FFE4EC,#FFD1DC);">
+          <span style="font-size:16px;">⚡</span>
+        </div>
+        <div class="flex-1 min-w-0">
+          <div class="text-[11px] font-bold uppercase tracking-wider text-pink-600">Moment-Match · Just for you</div>
+          <div class="text-[12px] text-gray-700 leading-tight mt-0.5">Tough week? Niharika has helped 200+ people through breakups.</div>
+        </div>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#E91E63" stroke-width="2.5" class="flex-shrink-0"><path d="M9 18l6-6-6-6"/></svg>
+      </button>
+    </div>
+
+    <!-- Café Intro Hero -->
+    <div class="px-4 pt-3">
       <div class="bg-white rounded-3xl card-shadow overflow-hidden">
         <div class="px-4 py-3 flex items-center gap-3" style="background:linear-gradient(135deg,#FFE4EC 0%,#F3E8FF 50%,#E0F2FE 100%);">
           <div class="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0" style="background:linear-gradient(135deg,#E91E63,#9333EA);box-shadow:0 4px 12px rgba(147,51,234,0.3);">
@@ -396,78 +433,70 @@
       </div>
     </div>
 
-    <div class="px-4 space-y-3 pb-56">
-      <!-- Niharika (replaces Akruti) -->
-      <div class="bg-white rounded-3xl card-shadow p-4">
-        <div class="flex items-start gap-3">
-          <div class="w-16 h-16 rounded-full ring-green flex-shrink-0 avatar-circle" style="background:linear-gradient(135deg,#FB923C,#F97316);">
+    <div class="px-4 space-y-2.5 pb-52">
+      <!-- Niharika (BEST MATCH — keeps the full Call Now hero) -->
+      <div class="bg-white rounded-2xl card-shadow p-3">
+        <div class="flex items-center gap-3">
+          <div class="w-14 h-14 rounded-full ring-green flex-shrink-0 avatar-circle" style="background:linear-gradient(135deg,#FB923C,#F97316);">
             <img class="avatar-img" src="assets/niharika.jpg" alt="Niharika"/>
           </div>
-          <div class="flex-1">
-            <div class="flex items-center gap-2"><span class="text-lg font-bold">Niharika</span><span class="verified-tick">✓</span></div>
-            <div class="flex items-center gap-1.5 mt-1 text-xs text-gray-700">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="#FBBF24"><polygon points="12 2 15 8.5 22 9.3 17 14 18.2 21 12 17.8 5.8 21 7 14 2 9.3 9 8.5"/></svg>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-2"><span class="text-base font-bold">Niharika</span><span class="verified-tick" style="width:14px;height:14px;font-size:9px;">✓</span></div>
+            <div class="flex items-center gap-1.5 mt-0.5 text-[11px] text-gray-700">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="#FBBF24"><polygon points="12 2 15 8.5 22 9.3 17 14 18.2 21 12 17.8 5.8 21 7 14 2 9.3 9 8.5"/></svg>
               <span class="font-semibold">4.9 (412)</span><span>·</span><span>148 hrs</span>
             </div>
-            <div class="text-xs text-gray-700 mt-1">Listener · Breakup recovery</div>
+            <div class="text-[11px] text-gray-600 italic leading-tight mt-0.5 truncate">"I survived losing my love. I'll just listen."</div>
           </div>
-          <button><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2"><polygon points="12 2 15 8.5 22 9.3 17 14 18.2 21 12 17.8 5.8 21 7 14 2 9.3 9 8.5"/></svg></button>
+          <span class="price-chip flex-shrink-0">₹149/min</span>
         </div>
-        <div class="mt-3 italic text-gray-700 text-sm">"I survived losing my love. I'll just listen."</div>
-        <div class="mt-3">
-          <div class="flex justify-end mb-1.5"><span class="price-chip">₹149/min</span></div>
-          <button class="green-pill text-white font-semibold w-full py-3 rounded-xl flex items-center justify-center gap-2" onclick="goTo(6)">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.37 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.33 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-            Call Now
-          </button>
-        </div>
+        <button class="green-pill text-white font-semibold w-full py-2 rounded-xl flex items-center justify-center gap-2 mt-2.5 text-sm" onclick="goTo(6)">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="white"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.37 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.33 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          Call Now
+        </button>
       </div>
 
-      <!-- Vrushali -->
-      <div class="bg-white rounded-3xl card-shadow p-4">
-        <div class="flex items-start gap-3">
-          <div class="w-16 h-16 rounded-full ring-green flex-shrink-0 avatar-circle" style="background:linear-gradient(135deg,#F59E0B,#FB923C);">
+      <!-- Vrushali (compact — Audio + Chat in one row) -->
+      <div class="bg-white rounded-2xl card-shadow p-3">
+        <div class="flex items-center gap-3">
+          <div class="w-12 h-12 rounded-full ring-green flex-shrink-0 avatar-circle" style="background:linear-gradient(135deg,#F59E0B,#FB923C);">
             <img class="avatar-img" src="assets/vrushali.jpg" alt="Vrushali"/>
           </div>
-          <div class="flex-1">
-            <div class="flex items-center gap-2"><span class="text-lg font-bold">Vrushali</span><span class="verified-tick">✓</span></div>
-            <div class="flex items-center gap-1.5 mt-1 text-xs text-gray-700">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="#FBBF24"><polygon points="12 2 15 8.5 22 9.3 17 14 18.2 21 12 17.8 5.8 21 7 14 2 9.3 9 8.5"/></svg>
-              <span class="font-semibold">4.7 (2772)</span><span>·</span><span>201 hrs</span>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-2"><span class="text-sm font-bold">Vrushali</span><span class="verified-tick" style="width:14px;height:14px;font-size:9px;">✓</span></div>
+            <div class="flex items-center gap-1.5 mt-0.5 text-[10px] text-gray-700">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="#FBBF24"><polygon points="12 2 15 8.5 22 9.3 17 14 18.2 21 12 17.8 5.8 21 7 14 2 9.3 9 8.5"/></svg>
+              <span class="font-semibold">4.7 (2772)</span><span>·</span><span>Astrologer</span>
             </div>
-            <div class="text-xs text-gray-700 mt-1">Astrologer</div>
+            <div class="text-[11px] text-gray-600 italic leading-tight mt-0.5 truncate">"Tarot &amp; Astrology for Real-Life Answers"</div>
           </div>
         </div>
-        <div class="mt-3 italic text-gray-700 text-sm">"Tarot & Astrology for Real-Life Answers"</div>
-        <div class="grid grid-cols-2 gap-2 mt-3">
-          <div><div class="flex justify-center mb-1.5"><span class="price-chip">₹14/min</span></div><button class="green-pill text-white font-semibold w-full py-2.5 rounded-xl text-sm" onclick="goTo(6)">Audio</button></div>
-          <div><div class="flex justify-center mb-1.5"><span class="price-chip">₹12/min</span></div><button class="green-pill text-white font-semibold w-full py-2.5 rounded-xl text-sm">Chat</button></div>
+        <div class="grid grid-cols-2 gap-2 mt-2">
+          <button class="green-pill text-white font-semibold py-1.5 rounded-lg text-xs flex items-center justify-center gap-1.5" onclick="goTo(6)"><span>Audio</span><span class="text-white/80 text-[10px]">₹14</span></button>
+          <button class="green-pill text-white font-semibold py-1.5 rounded-lg text-xs flex items-center justify-center gap-1.5"><span>Chat</span><span class="text-white/80 text-[10px]">₹12</span></button>
         </div>
       </div>
 
-      <!-- Mauli -->
-      <div class="bg-white rounded-3xl card-shadow p-4">
-        <div class="flex items-start gap-3">
-          <div class="w-16 h-16 rounded-full ring-green flex-shrink-0 avatar-circle" style="background:linear-gradient(135deg,#10B981,#059669);">
+      <!-- Mauli (compact, single Call Now) -->
+      <div class="bg-white rounded-2xl card-shadow p-3">
+        <div class="flex items-center gap-3">
+          <div class="w-12 h-12 rounded-full ring-green flex-shrink-0 avatar-circle" style="background:linear-gradient(135deg,#10B981,#059669);">
             <img class="avatar-img" src="assets/mauli.jpg" alt="Mauli"/>
           </div>
-          <div class="flex-1">
-            <div class="flex items-center gap-2"><span class="text-lg font-bold">Mauli</span><span class="verified-tick">✓</span></div>
-            <div class="flex items-center gap-1.5 mt-1 text-xs text-gray-700">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="#FBBF24"><polygon points="12 2 15 8.5 22 9.3 17 14 18.2 21 12 17.8 5.8 21 7 14 2 9.3 9 8.5"/></svg>
-              <span class="font-semibold">4.8 (2120)</span><span>·</span><span>763 hrs</span>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-2"><span class="text-sm font-bold">Mauli</span><span class="verified-tick" style="width:14px;height:14px;font-size:9px;">✓</span></div>
+            <div class="flex items-center gap-1.5 mt-0.5 text-[10px] text-gray-700">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="#FBBF24"><polygon points="12 2 15 8.5 22 9.3 17 14 18.2 21 12 17.8 5.8 21 7 14 2 9.3 9 8.5"/></svg>
+              <span class="font-semibold">4.8 (2120)</span><span>·</span><span>Dating Coach</span>
             </div>
-            <div class="text-xs text-gray-700 mt-1">Dating Coach</div>
+            <div class="text-[11px] text-gray-600 italic leading-tight mt-0.5 truncate">"Build the Confidence You've Been Missing"</div>
           </div>
+          <span class="price-chip flex-shrink-0">₹16/min</span>
         </div>
-        <div class="mt-3 italic text-gray-700 text-sm">"Build the Confidence You've Been Missing"</div>
-        <div class="mt-3">
-          <div class="flex justify-end mb-1.5"><span class="price-chip">₹16/min</span></div>
-          <button class="green-pill text-white font-semibold w-full py-3 rounded-xl flex items-center justify-center gap-2" onclick="goTo(6)">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.37 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.33 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-            Call Now
-          </button>
-        </div>
+        <button class="green-pill text-white font-semibold w-full py-2 rounded-xl flex items-center justify-center gap-2 mt-2.5 text-sm" onclick="goTo(6)">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="white"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.37 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.33 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          Call Now
+        </button>
       </div>
     </div>
 
@@ -685,27 +714,27 @@
         <div class="text-xs text-white/60 italic">"Take your time. There's nothing you can say here that will surprise me."</div>
       </div>
 
-      <!-- ElevenLabs widget mounts visibly here so audio + mic permission
-           work reliably. Status pill narrates state above the widget. -->
-      <div class="mt-4 text-center">
-        <div class="call-status-pill" id="call-status">
-          <span class="live-dot"></span>
-          <span id="call-status-text">Tap “Start a call” below to talk to Niharika</span>
-        </div>
-        <div class="text-[10px] text-white/30 mt-2">Audio is end-to-end private · Powered by ElevenLabs</div>
+      <!-- (Status pill + widget + end-call button live together in the
+           .call-deck below — keeps everything in one cohesive surface.) -->
+      <div class="mt-3 text-center">
+        <div class="text-[10px] text-white/30">Audio is end-to-end private</div>
       </div>
     </div>
 
-    <div class="absolute bottom-10 left-0 right-0 flex items-center justify-around px-12">
-      <button class="w-12 h-12 rounded-full bg-white/15 flex items-center justify-center backdrop-blur-sm">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M12 14a3 3 0 0 0 3-3V5a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3z"/><path d="M19 11a7 7 0 0 1-14 0M12 18v3"/></svg>
-      </button>
-      <button class="w-16 h-16 rounded-full flex items-center justify-center" style="background:#EF4444;box-shadow:0 6px 20px rgba(239,68,68,0.5);" onclick="endCall()">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="white" style="transform:rotate(135deg);"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.37 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.33 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-      </button>
-      <button class="w-12 h-12 rounded-full bg-white/15 flex items-center justify-center backdrop-blur-sm">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M4 15v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
-      </button>
+    <!-- Unified glass control deck: status pill on top, widget + end button in a single row -->
+    <div class="call-deck">
+      <div class="text-center">
+        <div class="call-status-pill" id="call-status">
+          <span class="live-dot"></span>
+          <span id="call-status-text">Tap “Start a call” to talk to Niharika</span>
+        </div>
+      </div>
+      <div class="call-deck-row">
+        <div class="eleven-wrapper" id="eleven-mount"></div>
+        <button class="end-call-btn" onclick="endCall()" title="End call &amp; see summary">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="white" style="transform:rotate(135deg);"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.37 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.33 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        </button>
+      </div>
     </div>
   </div>
 
@@ -847,6 +876,17 @@
       const sheet = document.getElementById('upi-sheet');
       sheet.classList.remove('open');
       setTimeout(()=>sheet.classList.add('open'), 300);
+      // Re-show the iOS push banner each visit and re-fire the
+      // slide-down animation (otherwise a previous dismiss leaves it
+      // hidden and the page looks empty above the UPI sheet).
+      const banner = document.getElementById('push-banner');
+      if(banner){
+        banner.style.display = '';
+        banner.style.animation = 'none';
+        // Force reflow so the next assignment restarts the animation
+        void banner.offsetWidth;
+        banner.style.animation = '';
+      }
     }
   }
 
@@ -972,13 +1012,12 @@
       document.body.appendChild(script);
       elevenLabsScriptLoaded = true;
     }
-    // Mount widget invisibly inside the phone-shell. The audio session
-    // runs in the background; our pulsing-avatar UI is the visible state.
-    const phoneShell = document.querySelector('.phone-shell');
-    let wrapper = document.querySelector('.eleven-wrapper');
-    if(!wrapper){
-      wrapper = document.createElement('div');
-      wrapper.className = 'eleven-wrapper';
+    // Mount widget into the in-call control deck (#eleven-mount).
+    // It sits next to our End-call button in a single glass row, so
+    // the widget reads as native UI rather than a popup.
+    const mountSlot = document.getElementById('eleven-mount');
+    if(!mountSlot) return;
+    if(!mountSlot.querySelector('elevenlabs-convai')){
       const widget = document.createElement('elevenlabs-convai');
       widget.setAttribute('agent-id', ELEVENLABS_AGENT_ID);
       // Branded text overrides — even if the widget chrome ever leaks
@@ -992,10 +1031,9 @@
       widget.setAttribute('avatar-image-url', 'assets/niharika.jpg');
       widget.setAttribute('avatar-orb-color-1', '#FB923C');
       widget.setAttribute('avatar-orb-color-2', '#F97316');
-      wrapper.appendChild(widget);
-      phoneShell.appendChild(wrapper);
+      mountSlot.appendChild(widget);
 
-      setCallStatus('Tap “Start a call” below to talk to Niharika', 'green');
+      setCallStatus('Tap “Start a call” to talk to Niharika', 'green');
 
       // Try the public startSession() API once if it exists. Otherwise
       // we leave the widget visible so the user's own tap on "Start a
@@ -1019,15 +1057,20 @@
       };
       setTimeout(()=>trySdkStart(0), 600);
 
-      // When the convai widget dispatches its own session events, we
-      // can update our pill from the truth. (Event names per ElevenLabs
-      // public docs; harmless if not emitted.)
-      const widgetEl = wrapper.querySelector('elevenlabs-convai');
+      // Listen for widget session events — keep the green pill in sync
+      // and auto-navigate to the session-end screen when the widget
+      // session terminates (so the user only ever needs ONE end-call
+      // tap whether they hit our red button or the widget's own).
+      const widgetEl = mountSlot.querySelector('elevenlabs-convai');
       if(widgetEl){
         widgetEl.addEventListener('convai-session-started', () =>
           setCallStatus('Niharika is here · live', 'green'));
-        widgetEl.addEventListener('convai-session-ended', () =>
-          setCallStatus('Call ended', 'red'));
+        widgetEl.addEventListener('convai-session-ended', () => {
+          setCallStatus('Call ended', 'red');
+          // Brief pause so the user sees the "Call ended" pill, then
+          // glide to the session-end summary screen.
+          setTimeout(() => { if(current === 6) goTo(7); }, 800);
+        });
         widgetEl.addEventListener('convai-error', (e) => {
           console.warn('convai error', e);
           setCallStatus('Audio error — try Chrome / allow mic', 'red');
@@ -1040,9 +1083,8 @@
     const widget = document.querySelector('elevenlabs-convai');
     if(widget){
       try { if(typeof widget.endSession === 'function') widget.endSession(); } catch(e){}
+      widget.remove();
     }
-    const wrapper = document.querySelector('.eleven-wrapper');
-    if(wrapper) wrapper.remove();
     setCallStatus('Connecting to Niharika…', 'green');
   }
 
