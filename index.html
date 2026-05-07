@@ -84,9 +84,35 @@
   .frame-nav-num{width:26px;height:26px;border-radius:50%;background:#FCE4EC;color:#E91E63;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
   .frame-nav-label{font-size:13px;color:#111;font-weight:600;}
   .frame-nav-sub{font-size:10.5px;color:#6B7280;margin-top:1px;}
-  /* ElevenLabs widget — pinned INSIDE phone-shell on /call */
-  .eleven-wrapper{position:absolute;bottom:96px;left:50%;transform:translateX(-50%);z-index:55;}
+  /* ElevenLabs widget — mounted invisibly inside phone-shell on /call.
+     The widget powers the audio session; our own pulsing-ring avatar +
+     timer + end-call button are the visible UI. The default convai
+     "Need help? · Start a call" card is suppressed so the in-call
+     screen stays branded and uncluttered. */
+  .eleven-wrapper{
+    position:absolute;left:0;bottom:0;
+    width:1px;height:1px;overflow:hidden;
+    opacity:0;pointer-events:none;
+    z-index:-1;
+  }
   elevenlabs-convai{position:relative!important;display:block;}
+  /* Status pill that replaces the widget — narrates session state. */
+  .call-status-pill{
+    display:inline-flex;align-items:center;gap:8px;
+    background:rgba(34,197,94,0.16);color:#86EFAC;
+    border-radius:999px;padding:6px 14px;
+    font-size:11px;font-weight:600;letter-spacing:0.02em;
+  }
+  .call-status-pill .live-dot{
+    width:7px;height:7px;border-radius:50%;background:#22C55E;
+    box-shadow:0 0 0 0 rgba(34,197,94,0.6);
+    animation:livePulse 1.6s ease-out infinite;
+  }
+  @keyframes livePulse{
+    0%{box-shadow:0 0 0 0 rgba(34,197,94,0.55);}
+    70%{box-shadow:0 0 0 8px rgba(34,197,94,0);}
+    100%{box-shadow:0 0 0 0 rgba(34,197,94,0);}
+  }
   .avatar-img{width:100%;height:100%;border-radius:50%;object-fit:cover;display:block;}
   .avatar-circle{position:relative;overflow:hidden;}
 </style>
@@ -243,8 +269,8 @@
     <!-- Profile card -->
     <div class="px-4 pt-3">
       <div class="bg-white rounded-3xl card-shadow overflow-hidden">
-        <div class="relative h-72 overflow-hidden" style="background:linear-gradient(135deg,#FFB7C5 0%,#FF8AB3 100%);">
-          <img src="https://api.dicebear.com/7.x/lorelei/svg?seed=Ananya27&backgroundColor=ffb7c5&hair=variant08&earrings=variant03" alt="Ananya" style="width:100%;height:100%;object-fit:cover;"/>
+        <div class="relative h-56 overflow-hidden" style="background:linear-gradient(135deg,#FFB7C5 0%,#FF8AB3 100%);">
+          <img src="assets/ananya.jpg" alt="Ananya" style="width:100%;height:100%;object-fit:cover;"/>
           <div class="absolute top-3 left-3 flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-white text-xs font-semibold" style="background:linear-gradient(90deg,#9333EA,#E91E63);">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.5 4.5L18 8l-4.5 1.5L12 14l-1.5-4.5L6 8l4.5-1.5z"/></svg>
             Astro 92%
@@ -267,7 +293,7 @@
           </button>
         </div>
       </div>
-      <p class="text-center text-xs text-gray-500 mt-3 mb-24">Astro Compatibility unlocked · <span class="text-pink-600 font-semibold">Tap to know more</span></p>
+      <p class="text-center text-xs text-gray-500 mt-3 mb-4">Astro Compatibility unlocked · <span class="text-pink-600 font-semibold">Tap to know more</span></p>
     </div>
 
     <div class="absolute bottom-4 left-4 right-4 nav-pill flex items-center justify-around py-2.5 px-3">
@@ -363,12 +389,12 @@
       </div>
     </div>
 
-    <div class="px-4 space-y-3 pb-44">
+    <div class="px-4 space-y-3 pb-56">
       <!-- Niharika (replaces Akruti) -->
       <div class="bg-white rounded-3xl card-shadow p-4">
         <div class="flex items-start gap-3">
           <div class="w-16 h-16 rounded-full ring-green flex-shrink-0 avatar-circle" style="background:linear-gradient(135deg,#FB923C,#F97316);">
-            <img class="avatar-img" src="https://api.dicebear.com/7.x/lorelei/svg?seed=Niharika&backgroundColor=fb923c&hair=variant05&earrings=variant03" alt="Niharika"/>
+            <img class="avatar-img" src="assets/niharika.jpg" alt="Niharika"/>
           </div>
           <div class="flex-1">
             <div class="flex items-center gap-2"><span class="text-lg font-bold">Niharika</span><span class="verified-tick">✓</span></div>
@@ -394,7 +420,7 @@
       <div class="bg-white rounded-3xl card-shadow p-4">
         <div class="flex items-start gap-3">
           <div class="w-16 h-16 rounded-full ring-green flex-shrink-0 avatar-circle" style="background:linear-gradient(135deg,#F59E0B,#FB923C);">
-            <img class="avatar-img" src="https://api.dicebear.com/7.x/lorelei/svg?seed=Vrushali&backgroundColor=fcd34d&hair=variant02&earrings=variant01" alt="Vrushali"/>
+            <img class="avatar-img" src="assets/vrushali.jpg" alt="Vrushali"/>
           </div>
           <div class="flex-1">
             <div class="flex items-center gap-2"><span class="text-lg font-bold">Vrushali</span><span class="verified-tick">✓</span></div>
@@ -416,7 +442,7 @@
       <div class="bg-white rounded-3xl card-shadow p-4">
         <div class="flex items-start gap-3">
           <div class="w-16 h-16 rounded-full ring-green flex-shrink-0 avatar-circle" style="background:linear-gradient(135deg,#10B981,#059669);">
-            <img class="avatar-img" src="https://api.dicebear.com/7.x/lorelei/svg?seed=Mauli&backgroundColor=a7f3d0&hair=variant04&earrings=variant02" alt="Mauli"/>
+            <img class="avatar-img" src="assets/mauli.jpg" alt="Mauli"/>
           </div>
           <div class="flex-1">
             <div class="flex items-center gap-2"><span class="text-lg font-bold">Mauli</span><span class="verified-tick">✓</span></div>
@@ -498,7 +524,7 @@
           <div class="text-xl font-bold text-gray-900 leading-snug">Tough week? You don't have to sit with it alone.</div>
           <div class="text-sm text-gray-600 mt-2 leading-relaxed">Niharika has walked <span class="font-semibold text-gray-800">200+ people</span> through breakups. <span class="font-semibold text-green-700">First 5 min free.</span></div>
           <div class="flex items-center gap-3 mt-4 pt-4 border-t border-gray-100">
-            <div class="w-12 h-12 rounded-full ring-green flex-shrink-0 avatar-circle" style="background:linear-gradient(135deg,#FB923C,#F97316);"><img class="avatar-img" src="https://api.dicebear.com/7.x/lorelei/svg?seed=Niharika&backgroundColor=fb923c&hair=variant05&earrings=variant03" alt="Niharika"/></div>
+            <div class="w-12 h-12 rounded-full ring-green flex-shrink-0 avatar-circle" style="background:linear-gradient(135deg,#FB923C,#F97316);"><img class="avatar-img" src="assets/niharika.jpg" alt="Niharika"/></div>
             <div class="flex-1">
               <div class="flex items-center gap-1.5 text-sm font-semibold text-gray-900">Niharika <span class="verified-tick" style="width:14px;height:14px;font-size:9px;">✓</span></div>
               <div class="text-xs text-gray-600 mt-0.5">4.9 (412) · Listener · <span class="text-pink-600 font-semibold">Breakup recovery</span></div>
@@ -554,7 +580,7 @@
       <div class="bg-white rounded-3xl card-shadow p-4 relative" style="border:2px solid #FCD34D;">
         <div class="absolute -top-3 left-3 px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider text-white" style="background:#F59E0B;">⭐ BEST MATCH</div>
         <div class="flex items-start gap-3 mt-1">
-          <div class="w-16 h-16 rounded-full ring-green flex-shrink-0 avatar-circle" style="background:linear-gradient(135deg,#FB923C,#F97316);"><img class="avatar-img" src="https://api.dicebear.com/7.x/lorelei/svg?seed=Niharika&backgroundColor=fb923c&hair=variant05&earrings=variant03" alt="Niharika"/></div>
+          <div class="w-16 h-16 rounded-full ring-green flex-shrink-0 avatar-circle" style="background:linear-gradient(135deg,#FB923C,#F97316);"><img class="avatar-img" src="assets/niharika.jpg" alt="Niharika"/></div>
           <div class="flex-1">
             <div class="flex items-center gap-2"><span class="text-lg font-bold">Niharika</span><span class="verified-tick">✓</span></div>
             <div class="flex items-center gap-1.5 mt-1 text-xs text-gray-700">
@@ -578,7 +604,7 @@
       <!-- Khyati -->
       <div class="bg-white rounded-3xl card-shadow p-4">
         <div class="flex items-start gap-3">
-          <div class="w-14 h-14 rounded-full ring-green flex-shrink-0 avatar-circle" style="background:linear-gradient(135deg,#A78BFA,#8B5CF6);"><img class="avatar-img" src="https://api.dicebear.com/7.x/lorelei/svg?seed=Khyati&backgroundColor=ddd6fe&hair=variant07&earrings=variant04" alt="Khyati"/></div>
+          <div class="w-14 h-14 rounded-full ring-green flex-shrink-0 avatar-circle" style="background:linear-gradient(135deg,#A78BFA,#8B5CF6);"><img class="avatar-img" src="assets/khyati.jpg" alt="Khyati"/></div>
           <div class="flex-1">
             <div class="flex items-center gap-2"><span class="text-base font-bold">Khyati</span><span class="verified-tick">✓</span></div>
             <div class="flex items-center gap-1.5 mt-1 text-xs text-gray-700">
@@ -594,7 +620,7 @@
       <!-- Riya -->
       <div class="bg-white rounded-3xl card-shadow p-4">
         <div class="flex items-start gap-3">
-          <div class="w-14 h-14 rounded-full ring-green flex-shrink-0 avatar-circle" style="background:linear-gradient(135deg,#34D399,#10B981);"><img class="avatar-img" src="https://api.dicebear.com/7.x/lorelei/svg?seed=Riya&backgroundColor=a7f3d0&hair=variant09&earrings=variant05" alt="Riya"/></div>
+          <div class="w-14 h-14 rounded-full ring-green flex-shrink-0 avatar-circle" style="background:linear-gradient(135deg,#34D399,#10B981);"><img class="avatar-img" src="assets/riya.jpg" alt="Riya"/></div>
           <div class="flex-1">
             <div class="flex items-center gap-2"><span class="text-base font-bold">Riya</span><span class="verified-tick">✓</span></div>
             <div class="flex items-center gap-1.5 mt-1 text-xs text-gray-700">
@@ -626,7 +652,7 @@
         <div class="ring-pulse" style="width:200px;height:200px;"></div>
         <div class="ring-pulse" style="width:200px;height:200px;animation-delay:0.8s;"></div>
         <div class="w-40 h-40 rounded-full avatar-circle" style="background:linear-gradient(135deg,#FB923C,#F97316);box-shadow:0 0 60px rgba(251,146,60,0.5);">
-          <img class="avatar-img" src="https://api.dicebear.com/7.x/lorelei/svg?seed=Niharika&backgroundColor=fb923c&hair=variant05&earrings=variant03" alt="Niharika"/>
+          <img class="avatar-img" src="assets/niharika.jpg" alt="Niharika"/>
         </div>
       </div>
       <div class="text-2xl font-bold flex items-center gap-2">Niharika <span class="verified-tick">✓</span></div>
@@ -652,10 +678,14 @@
         <div class="text-xs text-white/60 italic">"Take your time. There's nothing you can say here that will surprise me."</div>
       </div>
 
-      <!-- ElevenLabs widget mounts INSIDE the phone-shell (.eleven-wrapper) -->
+      <!-- The ElevenLabs widget is mounted invisibly inside the phone-shell;
+           this status pill is the only visible state indicator. -->
       <div class="mt-6 text-center">
-        <div class="text-xs text-white/50 mb-1">⚡ Connecting you to Niharika…</div>
-        <div class="text-[10px] text-white/30">Audio is end-to-end private · Powered by ElevenLabs</div>
+        <div class="call-status-pill" id="call-status">
+          <span class="live-dot"></span>
+          <span id="call-status-text">Connecting to Niharika…</span>
+        </div>
+        <div class="text-[10px] text-white/30 mt-2">Audio is end-to-end private · Powered by ElevenLabs</div>
       </div>
     </div>
 
@@ -703,7 +733,7 @@
 
       <div class="bg-white rounded-2xl card-shadow p-4 mb-3">
         <div class="flex items-center gap-3 mb-3">
-          <div class="w-12 h-12 rounded-full ring-green flex-shrink-0 avatar-circle" style="background:linear-gradient(135deg,#FB923C,#F97316);"><img class="avatar-img" src="https://api.dicebear.com/7.x/lorelei/svg?seed=Niharika&backgroundColor=fb923c&hair=variant05&earrings=variant03" alt="Niharika"/></div>
+          <div class="w-12 h-12 rounded-full ring-green flex-shrink-0 avatar-circle" style="background:linear-gradient(135deg,#FB923C,#F97316);"><img class="avatar-img" src="assets/niharika.jpg" alt="Niharika"/></div>
           <div class="flex-1">
             <div class="font-semibold text-sm text-gray-900">Niharika is here when you're ready</div>
             <div class="text-xs text-gray-500">Same Listener, no re-explaining</div>
@@ -714,7 +744,7 @@
 
       <div class="bg-pink-50 rounded-2xl p-4 mb-3">
         <div class="flex items-center gap-3 mb-2">
-          <div class="w-12 h-12 rounded-full flex-shrink-0 avatar-circle" style="background:linear-gradient(135deg,#A78BFA,#8B5CF6);"><img class="avatar-img" src="https://api.dicebear.com/7.x/lorelei/svg?seed=EvaCoach&backgroundColor=ddd6fe&hair=variant10&earrings=variant02" alt="Eva"/></div>
+          <div class="w-12 h-12 rounded-full flex-shrink-0 avatar-circle" style="background:linear-gradient(135deg,#A78BFA,#8B5CF6);"><img class="avatar-img" src="assets/eva.jpg" alt="Eva"/></div>
           <div class="flex-1">
             <div class="font-semibold text-sm text-gray-900">Try a Coach next week</div>
             <div class="text-xs text-gray-500">Eva helps with what comes after the grief</div>
@@ -749,7 +779,7 @@
     <div id="upi-sheet" class="upi-sheet absolute bottom-0 left-0 right-0 bg-white rounded-t-3xl z-50 px-5 pt-4 pb-6 open" style="box-shadow:0 -10px 40px rgba(0,0,0,0.12);">
       <div class="w-12 h-1.5 bg-gray-300 rounded-full mx-auto mb-4"></div>
       <div class="flex items-center gap-3 mb-4">
-        <div class="w-12 h-12 rounded-full ring-green flex-shrink-0 avatar-circle" style="background:linear-gradient(135deg,#FB923C,#F97316);"><img class="avatar-img" src="https://api.dicebear.com/7.x/lorelei/svg?seed=Niharika&backgroundColor=fb923c&hair=variant05&earrings=variant03" alt="Niharika"/></div>
+        <div class="w-12 h-12 rounded-full ring-green flex-shrink-0 avatar-circle" style="background:linear-gradient(135deg,#FB923C,#F97316);"><img class="avatar-img" src="assets/niharika.jpg" alt="Niharika"/></div>
         <div class="flex-1">
           <div class="text-sm font-semibold text-gray-900">Recharge to talk to Niharika</div>
           <div class="text-xs text-gray-500">9:00 pm slot held · 5 mins left</div>
@@ -912,6 +942,19 @@
   const ELEVENLABS_AGENT_ID = 'agent_8401kqzfx7n9ev78hx24a0gyy9g4';
   let elevenLabsScriptLoaded = false;
 
+  function setCallStatus(text, color){
+    const el = document.getElementById('call-status-text');
+    const pill = document.getElementById('call-status');
+    if(el) el.textContent = text;
+    if(pill && color){
+      pill.style.background = color === 'red'
+        ? 'rgba(239,68,68,0.16)' : 'rgba(34,197,94,0.16)';
+      pill.style.color = color === 'red' ? '#FCA5A5' : '#86EFAC';
+      const dot = pill.querySelector('.live-dot');
+      if(dot) dot.style.background = color === 'red' ? '#EF4444' : '#22C55E';
+    }
+  }
+
   function mountElevenLabsWidget(){
     // Load the convai script once
     if(!elevenLabsScriptLoaded){
@@ -922,7 +965,8 @@
       document.body.appendChild(script);
       elevenLabsScriptLoaded = true;
     }
-    // Mount the widget INSIDE the phone-shell so it stays within the device frame
+    // Mount widget invisibly inside the phone-shell. The audio session
+    // runs in the background; our pulsing-avatar UI is the visible state.
     const phoneShell = document.querySelector('.phone-shell');
     let wrapper = document.querySelector('.eleven-wrapper');
     if(!wrapper){
@@ -930,26 +974,57 @@
       wrapper.className = 'eleven-wrapper';
       const widget = document.createElement('elevenlabs-convai');
       widget.setAttribute('agent-id', ELEVENLABS_AGENT_ID);
+      // Branded text overrides — even if the widget chrome ever leaks
+      // through, the copy stays on-brand.
+      widget.setAttribute('action-text', "Hi, I'm Niharika — I'm here.");
+      widget.setAttribute('start-call-text', '📞 Start the call');
+      widget.setAttribute('end-call-text', 'End call');
+      widget.setAttribute('expand-text', 'Talk now');
+      widget.setAttribute('listening-text', 'Listening…');
+      widget.setAttribute('speaking-text', 'Niharika is speaking…');
+      widget.setAttribute('avatar-image-url', 'assets/niharika.jpg');
+      widget.setAttribute('avatar-orb-color-1', '#FB923C');
+      widget.setAttribute('avatar-orb-color-2', '#F97316');
       wrapper.appendChild(widget);
       phoneShell.appendChild(wrapper);
 
-      // Auto-start the session — the user-gesture context from the
-      // Audio / Call Now click satisfies the browser autoplay policy.
+      setCallStatus('Connecting to Niharika…', 'green');
+
+      // Persistent auto-start: poll for the widget's start button and
+      // click it. The user-gesture context from the Audio/Call-Now tap
+      // satisfies the browser autoplay policy.
+      let started = false;
       const tryStart = (attempt) => {
+        if(started) return;
         const w = document.querySelector('elevenlabs-convai');
-        if(!w){ if(attempt<20) setTimeout(()=>tryStart(attempt+1), 250); return; }
+        if(!w){ if(attempt<40) setTimeout(()=>tryStart(attempt+1), 200); return; }
         try {
-          if(typeof w.startSession === 'function'){ w.startSession(); return; }
-          // Fallback: programmatically click the widget's call button once it renders
+          // Preferred: public method (some versions expose it)
+          if(typeof w.startSession === 'function'){
+            w.startSession(); started = true;
+            setCallStatus('Niharika is here · live', 'green');
+            return;
+          }
+          // Fallback: click the widget's start button inside its shadow DOM
           const root = w.shadowRoot;
           if(root){
-            const btn = root.querySelector('button');
-            if(btn){ btn.click(); return; }
+            const candidates = root.querySelectorAll('button');
+            for(const btn of candidates){
+              const label = (btn.textContent||'').trim().toLowerCase();
+              if(label.includes('start') || label.includes('call') || label.includes('talk')){
+                btn.click(); started = true;
+                setCallStatus('Niharika is here · live', 'green');
+                return;
+              }
+            }
+            // No labelled button yet — try the first interactive button
+            if(candidates.length){ candidates[0].click(); }
           }
         } catch(e){}
-        if(attempt<20) setTimeout(()=>tryStart(attempt+1), 250);
+        if(attempt<40) setTimeout(()=>tryStart(attempt+1), 200);
+        else setCallStatus('Tap the widget to begin', 'green');
       };
-      setTimeout(()=>tryStart(0), 500);
+      setTimeout(()=>tryStart(0), 400);
     }
   }
 
@@ -960,6 +1035,7 @@
     }
     const wrapper = document.querySelector('.eleven-wrapper');
     if(wrapper) wrapper.remove();
+    setCallStatus('Connecting to Niharika…', 'green');
   }
 
   document.addEventListener('keydown',(e)=>{
