@@ -28,6 +28,7 @@
     background:linear-gradient(180deg,var(--pink-bg-1) 0%,var(--pink-bg-2) 60%,#fff 100%);
     box-shadow:0 30px 80px rgba(0,0,0,0.45),0 0 0 12px #111 inset,0 0 0 14px #2a2a2a;
     overflow:hidden;position:relative;
+    transform:translateZ(0);
   }
   .notch{position:absolute;top:8px;left:50%;transform:translateX(-50%);width:120px;height:32px;background:#000;border-radius:20px;z-index:60;}
   .status-bar{position:absolute;top:0;left:0;right:0;height:50px;display:flex;align-items:center;justify-content:space-between;padding:14px 28px 0 28px;font-size:15px;font-weight:600;color:#111;z-index:50;}
@@ -325,7 +326,7 @@
     </div>
 
     <!-- Profile card -->
-    <div class="px-4 pt-3 pb-12">
+    <div class="px-4 pt-3 pb-4">
       <div class="bg-white rounded-3xl card-shadow overflow-hidden">
         <div class="relative h-44 overflow-hidden" style="background:linear-gradient(135deg,#FFB7C5 0%,#FF8AB3 100%);">
           <img src="assets/ananya.jpg" alt="Ananya" style="width:100%;height:100%;object-fit:cover;object-position:center 20%;"/>
@@ -353,7 +354,7 @@
       </div>
     </div>
 
-    <div class="absolute bottom-4 left-4 right-4 nav-pill flex items-center justify-around py-2.5 px-3">
+    <div class="fixed bottom-4 left-4 right-4 nav-pill flex items-center justify-around py-2.5 px-3" style="z-index:30;">
       <div class="flex flex-col items-center gap-0.5 cursor-pointer" onclick="openFrameNav()"><svg width="22" height="22"><use href="#tm-logo"/></svg><span class="text-[10px] font-semibold text-gray-900">Suggested</span></div>
       <div class="flex flex-col items-center gap-0.5 opacity-60"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#374151" stroke-width="2"><path d="M12 21s-7-4.5-9.5-9C0.5 8 3 4 7 4c2 0 3.5 1 5 3 1.5-2 3-3 5-3 4 0 6.5 4 4.5 8C19 16.5 12 21 12 21z"/></svg><span class="text-[10px] font-medium text-gray-700">Likes You</span></div>
       <div class="flex flex-col items-center gap-0.5 opacity-60 relative"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#374151" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span class="text-[10px] font-medium text-gray-700">Chat</span><div class="absolute -top-1 right-2 dot-red"></div></div>
