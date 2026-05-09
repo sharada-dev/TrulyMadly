@@ -212,7 +212,7 @@
           <svg width="22" height="22"><use href="#tm-logo"/></svg>
           <div>
             <div style="font-size:13px;font-weight:700;color:#111;">Jump to frame</div>
-            <div style="font-size:10px;color:#6B7280;">Demo navigator · 9 screens</div>
+            <div style="font-size:10px;color:#6B7280;">Demo navigator · 10 screens</div>
           </div>
         </div>
         <button onclick="closeFrameNav()" style="background:#F3F4F6;border:none;width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:14px;color:#374151;">✕</button>
@@ -221,10 +221,11 @@
       <div class="frame-nav-row" onclick="navJump(1)"><div class="frame-nav-num">2</div><div><div class="frame-nav-label">What brings you here?</div><div class="frame-nav-sub">Language + emotional state</div></div></div>
       <div class="frame-nav-row" onclick="navJump(2)"><div class="frame-nav-num">3</div><div><div class="frame-nav-label">TM Café browse</div><div class="frame-nav-sub">All experts · price chips</div></div></div>
       <div class="frame-nav-row" onclick="navJump(3)" style="background:#FFF7ED;"><div class="frame-nav-num" style="background:#F59E0B;color:#fff;">4</div><div><div class="frame-nav-label">⚡ Moment match trigger</div><div class="frame-nav-sub">Tough week? Niharika first 5 min free</div></div></div>
-      <div class="frame-nav-row" onclick="navJump(4)"><div class="frame-nav-num">5</div><div><div class="frame-nav-label">Listeners for you</div><div class="frame-nav-sub">Hand-picked · Tier 2 pricing</div></div></div>
+      <div class="frame-nav-row" onclick="navJump(4)"><div class="frame-nav-num">5</div><div><div class="frame-nav-label">Listeners for you</div><div class="frame-nav-sub">Hand-picked · Café Lite</div></div></div>
       <div class="frame-nav-row" onclick="navJump(6)"><div class="frame-nav-num">6</div><div><div class="frame-nav-label">In-call audio · ElevenLabs</div><div class="frame-nav-sub">Voice agent auto-starts on entry</div></div></div>
+      <div class="frame-nav-row" onclick="navJump(5)" style="background:#FFF7ED;"><div class="frame-nav-num" style="background:#9333EA;color:#fff;">7B</div><div><div class="frame-nav-label">In-call continue sheet</div><div class="frame-nav-sub">Café Standard · Premium tiers</div></div></div>
       <div class="frame-nav-row" onclick="navJump(7)"><div class="frame-nav-num">7</div><div><div class="frame-nav-label">Session-end summary</div><div class="frame-nav-sub">Email opt-in · rebook</div></div></div>
-      <div class="frame-nav-row" onclick="navJump(8)"><div class="frame-nav-num">8</div><div><div class="frame-nav-label">Day-3 push + UPI recharge</div><div class="frame-nav-sub">PhonePe · GPay · Paytm</div></div></div>
+      <div class="frame-nav-row" onclick="navJump(8)"><div class="frame-nav-num">8</div><div><div class="frame-nav-label">Day-3 push + UPI</div><div class="frame-nav-sub">PhonePe · GPay · Paytm</div></div></div>
     </div>
   </div>
 
@@ -272,7 +273,7 @@
           </div>
           <div class="flex-1">
             <div class="text-base font-bold text-gray-900 leading-tight">Welcome to TM Café</div>
-            <div class="text-[11px] text-gray-700 leading-tight">Real conversations · Real humans · When you need them</div>
+            <div class="text-[11px] text-gray-700 leading-tight">Real conversations · Real humans + AI · When you need them</div>
           </div>
         </div>
         <div class="px-4 py-3 space-y-2.5">
@@ -281,7 +282,7 @@
               <svg width="18" height="18" viewBox="0 0 24 24" fill="#E91E63"><path d="M12 21s-7-4.5-9.5-9C0.5 8 3 4 7 4c2 0 3.5 1 5 3 1.5-2 3-3 5-3 4 0 6.5 4 4.5 8C19 16.5 12 21 12 21z"/></svg>
             </div>
             <div class="flex-1 min-w-0">
-              <div class="flex items-center justify-between"><span class="text-sm font-bold text-gray-900">Listeners</span><span class="text-[10px] font-semibold text-green-700">from ₹99/min</span></div>
+              <div class="flex items-center justify-between"><span class="text-sm font-bold text-gray-900">Listeners</span><span class="text-[10px] font-semibold text-green-700">from ₹49 / 5 min</span></div>
               <div class="text-[11px] text-gray-600 leading-tight">Vent the bad date, the breakup, the lonely Sunday. No advice — just heard.</div>
             </div>
           </div>
@@ -290,7 +291,7 @@
               <svg width="18" height="18" viewBox="0 0 24 24" fill="#9333EA"><path d="M12 2 4 6v6c0 5 3.5 9 8 10 4.5-1 8-5 8-10V6z"/></svg>
             </div>
             <div class="flex-1 min-w-0">
-              <div class="flex items-center justify-between"><span class="text-sm font-bold text-gray-900">Coaches</span><span class="text-[10px] font-semibold text-green-700">from ₹149/min</span></div>
+              <div class="flex items-center justify-between"><span class="text-sm font-bold text-gray-900">Coaches</span><span class="text-[10px] font-semibold text-green-700">from ₹49 / 5 min</span></div>
               <div class="text-[11px] text-gray-600 leading-tight">Dating tips, profile makeovers, confidence work, pre-date prep.</div>
             </div>
           </div>
@@ -299,15 +300,18 @@
               <svg width="18" height="18" viewBox="0 0 24 24" fill="#F59E0B"><polygon points="12 2 15 8.5 22 9.3 17 14 18.2 21 12 17.8 5.8 21 7 14 2 9.3 9 8.5"/></svg>
             </div>
             <div class="flex-1 min-w-0">
-              <div class="flex items-center justify-between"><span class="text-sm font-bold text-gray-900">Astrologers</span><span class="text-[10px] font-semibold text-green-700">from ₹12/min</span></div>
+              <div class="flex items-center justify-between"><span class="text-sm font-bold text-gray-900">Astrologers</span><span class="text-[10px] font-semibold text-green-700">from ₹49 / 5 min</span></div>
               <div class="text-[11px] text-gray-600 leading-tight">Tarot, Vedic compatibility, "kab milega," life-path readings.</div>
             </div>
           </div>
         </div>
         <div class="px-4 pb-3 pt-1">
-          <div class="rounded-xl px-3 py-2 mb-2.5 flex items-center gap-2" style="background:#F0FDF4;border:1px solid #BBF7D0;">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="#16A34A"><path d="M13 2 3 14h7l-1 8 11-12h-7z"/></svg>
-            <span class="text-[11px] font-semibold text-green-800">First 5 min free with any new expert · No auto-renew</span>
+          <div class="rounded-xl px-3 py-2 mb-2.5 flex flex-col gap-1" style="background:#F0FDF4;border:1px solid #BBF7D0;">
+            <div class="flex items-center gap-2">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="#16A34A"><path d="M13 2 3 14h7l-1 8 11-12h-7z"/></svg>
+              <span class="text-[11px] font-semibold text-green-800">First 5 min free with any new expert · No auto-renew</span>
+            </div>
+            <div class="text-[10px] text-green-800 leading-snug pl-[21px]"><span class="font-bold">Café Lite</span> ₹49 / 5 min &nbsp;·&nbsp; <span class="font-bold">Café Standard</span> ₹199 / 15 min &nbsp;·&nbsp; <span class="font-bold">Café Premium</span> ₹599 / 4 sessions</div>
           </div>
           <button class="green-pill text-white font-semibold w-full py-2.5 rounded-xl flex items-center justify-center gap-1.5 text-sm" onclick="goTo(1)">
             Explore Café <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
@@ -439,7 +443,7 @@
     </div>
 
     <div class="px-4 space-y-2.5 pb-52">
-      <!-- Niharika (BEST MATCH — keeps the full Call Now hero) -->
+      <!-- Niharika (BEST MATCH — keeps the full hero) -->
       <div class="bg-white rounded-2xl card-shadow p-3">
         <div class="flex items-center gap-3">
           <div class="w-14 h-14 rounded-full ring-green flex-shrink-0 avatar-circle" style="background:linear-gradient(135deg,#FB923C,#F97316);">
@@ -453,15 +457,15 @@
             </div>
             <div class="text-[11px] text-gray-600 italic leading-tight mt-0.5 truncate">"I survived losing my love. I'll just listen."</div>
           </div>
-          <span class="price-chip flex-shrink-0">₹149/min</span>
+          <span class="price-chip flex-shrink-0 whitespace-nowrap">Café Lite · ₹49 / 5 min mini</span>
         </div>
         <button class="green-pill text-white font-semibold w-full py-2 rounded-xl flex items-center justify-center gap-2 mt-2.5 text-sm" onclick="goTo(6)">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="white"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.37 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.33 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-          Call Now
+          Try a 5-min mini
         </button>
       </div>
 
-      <!-- Vrushali (compact — Audio + Chat in one row) -->
+      <!-- Vrushali (compact — single Café Lite mini CTA) -->
       <div class="bg-white rounded-2xl card-shadow p-3">
         <div class="flex items-center gap-3">
           <div class="w-12 h-12 rounded-full ring-green flex-shrink-0 avatar-circle" style="background:linear-gradient(135deg,#F59E0B,#FB923C);">
@@ -475,11 +479,12 @@
             </div>
             <div class="text-[11px] text-gray-600 italic leading-tight mt-0.5 truncate">"Tarot &amp; Astrology for Real-Life Answers"</div>
           </div>
+          <span class="price-chip flex-shrink-0 whitespace-nowrap">Café Lite · ₹49 / 5 min mini</span>
         </div>
-        <div class="grid grid-cols-2 gap-2 mt-2">
-          <button class="green-pill text-white font-semibold py-1.5 rounded-lg text-xs flex items-center justify-center gap-1.5" onclick="goTo(6)"><span>Audio</span><span class="text-white/80 text-[10px]">₹14</span></button>
-          <button class="green-pill text-white font-semibold py-1.5 rounded-lg text-xs flex items-center justify-center gap-1.5"><span>Chat</span><span class="text-white/80 text-[10px]">₹12</span></button>
-        </div>
+        <button class="green-pill text-white font-semibold w-full py-2 rounded-xl flex items-center justify-center gap-2 mt-2.5 text-sm" onclick="goTo(6)">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="white"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.37 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.33 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          Try a 5-min mini
+        </button>
       </div>
 
       <!-- Mauli (compact, single Call Now) -->
@@ -496,11 +501,11 @@
             </div>
             <div class="text-[11px] text-gray-600 italic leading-tight mt-0.5 truncate">"Build the Confidence You've Been Missing"</div>
           </div>
-          <span class="price-chip flex-shrink-0">₹16/min</span>
+          <span class="price-chip flex-shrink-0 whitespace-nowrap">Café Lite · ₹49 / 5 min mini</span>
         </div>
         <button class="green-pill text-white font-semibold w-full py-2 rounded-xl flex items-center justify-center gap-2 mt-2.5 text-sm" onclick="goTo(6)">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="white"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.37 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.33 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-          Call Now
+          Try a 5-min mini
         </button>
       </div>
     </div>
@@ -515,8 +520,8 @@
       </div>
       <div class="rounded-2xl p-3 mb-3 flex items-center justify-between" style="background:#DCFCE7;">
         <div>
-          <div class="font-bold text-gray-900 text-sm">Free ₹100 Balance</div>
-          <div class="text-[11px] text-gray-700 mt-0.5">For matchmakers · Café experts: first 5 min always free</div>
+          <div class="font-bold text-gray-900 text-sm">Free ₹100 credit</div>
+          <div class="text-[11px] text-gray-700 mt-0.5">Try any expert with a 5-min Café Lite mini on us</div>
         </div>
         <button class="green-pill text-white text-xs font-semibold px-3 py-1.5 rounded-full">Claim</button>
       </div>
@@ -604,7 +609,7 @@
       <button onclick="goTo(1)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#E91E63" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></button>
       <div class="flex-1">
         <div class="text-xl font-bold text-gray-900">Listeners for you</div>
-        <div class="text-xs text-gray-600">Hand-picked · Tier 2 pricing</div>
+        <div class="text-xs text-gray-600">Hand-picked · Café Lite</div>
       </div>
       <div class="text-xs font-semibold text-gray-700">₹0</div>
     </div>
@@ -614,7 +619,7 @@
         <span class="recommended-chip" id="rec-chip">⚡ Recommended for: Recent breakup</span>
         <span class="text-[11px] font-semibold rounded-full px-3 py-1 flex items-center gap-1" style="background:#FCE4EC;color:#9D174D;">🌐 <span id="lang-chip">English</span> <span class="text-pink-300">×</span></span>
       </div>
-      <div class="text-[11px] text-gray-500 mb-2">Showing 3 of 12 Listeners — speaks <span id="lang-text">English</span>, breakup recovery.</div>
+      <div class="text-[11px] text-gray-500 mb-2">Showing 3 of 12 Listeners — <span id="lang-text">English</span>, breakup recovery.</div>
 
       <!-- Niharika BEST MATCH -->
       <div class="bg-white rounded-3xl card-shadow p-4 relative" style="border:2px solid #FCD34D;">
@@ -634,10 +639,8 @@
             </div>
           </div>
         </div>
-        <div class="grid grid-cols-2 gap-2 mt-3">
-          <div><div class="flex justify-center mb-1.5"><span class="price-chip">₹149/min</span></div><button class="green-pill text-white font-semibold w-full py-2.5 rounded-xl text-sm" onclick="goTo(6)">Audio</button></div>
-          <div><div class="flex justify-center mb-1.5"><span class="price-chip">₹99/min</span></div><button class="green-pill text-white font-semibold w-full py-2.5 rounded-xl text-sm">Chat</button></div>
-        </div>
+        <div class="flex justify-center mt-3 mb-2"><span class="price-chip whitespace-nowrap">Café Lite · ₹49 / 5 min mini</span></div>
+        <button class="green-pill text-white font-semibold w-full py-2.5 rounded-xl text-sm" onclick="goTo(6)">Try a 5-min mini</button>
         <div class="text-center mt-2 text-[11px] font-semibold text-green-700">⚡ First 5 min free with Niharika</div>
       </div>
 
@@ -653,8 +656,9 @@
             </div>
             <div class="text-[11px] text-gray-600 mt-1 italic">"I supported myself out of a toxic relationship."</div>
           </div>
-          <span class="price-chip">₹129/min</span>
+          <span class="price-chip whitespace-nowrap flex-shrink-0">Café Lite · ₹49 / 5 min mini</span>
         </div>
+        <button class="green-pill text-white font-semibold w-full py-2.5 rounded-xl text-sm mt-3" onclick="goTo(6)">Try a 5-min mini</button>
       </div>
 
       <!-- Riya -->
@@ -669,13 +673,14 @@
             </div>
             <div class="text-[11px] text-gray-600 mt-1 italic">"Ghosting hurts. You're not crazy for feeling it."</div>
           </div>
-          <span class="price-chip">₹109/min</span>
+          <span class="price-chip whitespace-nowrap flex-shrink-0">Café Lite · ₹49 / 5 min mini</span>
         </div>
+        <button class="green-pill text-white font-semibold w-full py-2.5 rounded-xl text-sm mt-3" onclick="goTo(6)">Try a 5-min mini</button>
       </div>
 
       <div class="safety-note flex items-center gap-2">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#166534" stroke-width="2"><path d="M12 2 4 6v6c0 5 3.5 9 8 10 4.5-1 8-5 8-10V6z"/></svg>
-        All experts are verified · No video required · Sessions never recorded
+        All experts are Aadhaar verified · No video required · Sessions never recorded
       </div>
     </div>
   </div>
@@ -702,7 +707,7 @@
         <div class="bg-white/10 rounded-2xl px-4 py-3 backdrop-blur-sm">
           <div class="flex items-center justify-between text-xs">
             <span class="font-semibold text-green-400">⚡ First 5 min free</span>
-            <span class="text-white/70">Then ₹149/min</span>
+            <span class="text-white/70">Then choose a Café tier</span>
           </div>
           <div class="mt-2 h-1.5 bg-white/10 rounded-full overflow-hidden">
             <div class="h-full bg-green-400 transition-all" id="progress-bar" style="width:0%"></div>
@@ -751,6 +756,62 @@
         <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.37 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.33 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
         <span id="pre-call-cta-label">Start call</span>
       </button>
+    </div>
+  </div>
+
+  <!-- =========================================================== FRAME 7B — In-call recharge bottom-sheet =========================================================== -->
+  <div id="screen-5" class="screen no-bottom-pad" style="background:linear-gradient(180deg,#0F1F2D 0%,#1F2937 100%);color:white;">
+    <div class="px-5 pt-4 pb-3 flex items-center justify-between">
+      <span class="text-xs font-semibold text-white/60">Audio call · Listener</span>
+      <span class="timer-mono text-sm font-semibold">04:30</span>
+    </div>
+    <div class="flex flex-col items-center pt-6 px-6" style="opacity:0.45;">
+      <div class="w-28 h-28 rounded-full avatar-circle mb-3" style="background:linear-gradient(135deg,#FB923C,#F97316);box-shadow:0 0 60px rgba(251,146,60,0.5);">
+        <img class="avatar-img" src="assets/niharika.jpg" alt="Niharika"/>
+      </div>
+      <div class="text-lg font-bold flex items-center gap-2">Niharika <span class="verified-tick">✓</span></div>
+      <div class="text-xs text-white/60 mt-0.5">Listener · Breakup recovery</div>
+    </div>
+
+    <div class="absolute bottom-0 left-0 right-0 bg-white rounded-t-3xl z-50 px-5 pt-4 pb-6" style="box-shadow:0 -10px 40px rgba(0,0,0,0.35);color:#111;">
+      <div class="w-12 h-1.5 bg-gray-300 rounded-full mx-auto mb-4"></div>
+      <div class="flex items-center gap-3 mb-3">
+        <div class="w-12 h-12 rounded-full ring-green flex-shrink-0 avatar-circle" style="background:linear-gradient(135deg,#FB923C,#F97316);"><img class="avatar-img" src="assets/niharika.jpg" alt="Niharika"/></div>
+        <div class="flex-1">
+          <div class="text-sm font-semibold text-gray-900">Continue with Niharika</div>
+          <div class="text-[11px] text-gray-500 mt-0.5">Your 5 free minutes end in 0:30 · Choose your next step — no recharge, no meter.</div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-3 gap-2 mb-3">
+        <button class="border-2 border-gray-200 rounded-xl py-3 px-2 text-center">
+          <div class="text-base font-bold text-gray-900">₹199</div>
+          <div class="text-[10px] text-gray-600 mt-0.5 leading-tight">15-min session</div>
+          <div class="text-[9px] font-semibold text-gray-500 mt-1 uppercase tracking-wider">Café Standard</div>
+        </button>
+        <button class="rounded-xl py-3 px-2 text-center text-white relative" style="background:linear-gradient(135deg,#E91E63,#FF6B5B);box-shadow:0 4px 12px rgba(233,30,99,0.3);">
+          <div class="absolute -top-2 left-1/2 -translate-x-1/2 px-1.5 py-0.5 rounded text-[8px] font-bold uppercase tracking-wider text-white whitespace-nowrap" style="background:#9333EA;">Recommended</div>
+          <div class="text-base font-bold">₹599</div>
+          <div class="text-[10px] mt-0.5 leading-tight">4 sessions × 30 min over 14 days</div>
+          <div class="text-[9px] font-semibold text-white/90 mt-1 uppercase tracking-wider leading-tight">Café Premium · Recovery Pack</div>
+        </button>
+        <button class="border-2 border-gray-200 rounded-xl py-3 px-2 text-center">
+          <div class="text-base font-bold text-gray-900">₹399</div>
+          <div class="text-[10px] text-gray-600 mt-0.5 leading-tight">30-min Premium session</div>
+          <div class="text-[9px] font-semibold text-gray-500 mt-1 uppercase tracking-wider leading-tight">Café Premium · single session</div>
+        </button>
+      </div>
+
+      <div class="text-xs font-semibold text-gray-500 mb-2 uppercase tracking-wider">Pay via UPI</div>
+      <div class="grid grid-cols-3 gap-2 mb-3">
+        <button class="border border-gray-200 rounded-xl py-2.5 flex flex-col items-center gap-1"><div class="w-8 h-8 rounded-md flex items-center justify-center" style="background:#5F259F;"><span class="text-white text-[10px] font-bold">Pe</span></div><span class="text-[10px] text-gray-700 font-medium">PhonePe</span></button>
+        <button class="border-2 rounded-xl py-2.5 flex flex-col items-center gap-1" style="border-color:#E91E63;"><div class="w-8 h-8 rounded-md flex items-center justify-center bg-white border border-gray-200"><span class="text-sm font-bold" style="background:linear-gradient(135deg,#4285F4 25%,#EA4335 50%,#FBBC04 75%,#34A853);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">G</span></div><span class="text-[10px] text-gray-900 font-semibold">GPay</span></button>
+        <button class="border border-gray-200 rounded-xl py-2.5 flex flex-col items-center gap-1"><div class="w-8 h-8 rounded-md flex items-center justify-center" style="background:#00BAF2;"><span class="text-white text-[10px] font-bold">Pa</span></div><span class="text-[10px] text-gray-700 font-medium">Paytm</span></button>
+      </div>
+
+      <button class="w-full py-3 rounded-2xl font-semibold text-white text-sm" style="background:linear-gradient(135deg,#E91E63,#FF6B5B);box-shadow:0 6px 20px rgba(233,30,99,0.35);" onclick="paySuccess()">Stay with Niharika · ₹599 Recovery Pack via GPay →</button>
+      <div class="text-center mt-2 text-[11px] text-gray-500">End for now · She'll be here when you're ready</div>
+      <div class="text-center mt-1 text-[9px] text-gray-400 uppercase tracking-wider">Encrypted via UPI · No auto-renew · No per-minute meter · Refundable 7 days</div>
     </div>
   </div>
 
@@ -816,8 +877,8 @@
         <div class="w-8 h-8 rounded-md flex items-center justify-center flex-shrink-0" style="background:linear-gradient(135deg,#E91E63,#9333EA);"><span class="text-white text-[10px] font-bold italic">Café</span></div>
         <div class="flex-1">
           <div class="flex items-center justify-between"><span class="text-[10px] font-bold text-gray-700">TM CAFÉ</span><span class="text-[10px] text-gray-500">now</span></div>
-          <div class="text-sm font-semibold text-gray-900 mt-0.5">Niharika is free at 9pm tonight</div>
-          <div class="text-xs text-gray-600">Pick up where you left off. Recharge ₹199 to unlock.</div>
+          <div class="text-sm font-semibold text-gray-900 mt-0.5">Niharika has held your 9pm slot tonight</div>
+          <div class="text-xs text-gray-600">Pick up where you left off. Tap to continue.</div>
         </div>
       </div>
     </div>
@@ -833,24 +894,28 @@
       <div class="flex items-center gap-3 mb-4">
         <div class="w-12 h-12 rounded-full ring-green flex-shrink-0 avatar-circle" style="background:linear-gradient(135deg,#FB923C,#F97316);"><img class="avatar-img" src="assets/niharika.jpg" alt="Niharika"/></div>
         <div class="flex-1">
-          <div class="text-sm font-semibold text-gray-900">Recharge to talk to Niharika</div>
+          <div class="text-sm font-semibold text-gray-900">Continue with Niharika</div>
           <div class="text-xs text-gray-500">9:00 pm slot held · 5 mins left</div>
         </div>
       </div>
 
       <div class="grid grid-cols-3 gap-2 mb-4">
-        <button class="border-2 border-gray-200 rounded-xl py-3 px-2 text-center"><div class="text-xs text-gray-500">₹99</div><div class="text-[10px] text-gray-400 mt-0.5">~40 sec</div></button>
-        <button class="rounded-xl py-3 px-2 text-center text-white relative" style="background:linear-gradient(135deg,#E91E63,#FF6B5B);box-shadow:0 4px 12px rgba(233,30,99,0.3);">
-          <div class="absolute -top-2 left-1/2 -translate-x-1/2 px-1.5 py-0.5 rounded text-[8px] font-bold uppercase tracking-wider text-white" style="background:#9333EA;">Recommended</div>
-          <div class="text-sm font-bold">₹199</div>
-          <div class="text-[10px] mt-0.5 font-semibold">+10% bonus</div>
+        <button class="border-2 border-gray-200 rounded-xl py-3 px-2 text-center">
+          <div class="text-xs font-bold text-gray-900">Standard</div>
+          <div class="text-[10px] text-gray-700 mt-0.5 leading-tight">₹199 · 15-min session</div>
+          <div class="text-[9px] font-semibold text-gray-500 mt-1 uppercase tracking-wider leading-tight">Café Standard tier</div>
         </button>
-        <button class="border-2 border-gray-200 rounded-xl py-3 px-2 text-center"><div class="text-xs text-gray-700 font-semibold">₹499</div><div class="text-[10px] text-green-700 mt-0.5 font-semibold">+25% bonus</div></button>
-      </div>
-
-      <div class="bg-green-50 rounded-xl px-3 py-2 mb-4 flex items-center gap-2">
-        <span class="text-[10px] font-bold uppercase tracking-wider text-green-700">Bonus</span>
-        <span class="text-xs text-green-800">₹19 extra credited · valid 30 days</span>
+        <button class="rounded-xl py-3 px-2 text-center text-white relative" style="background:linear-gradient(135deg,#E91E63,#FF6B5B);box-shadow:0 4px 12px rgba(233,30,99,0.3);">
+          <div class="absolute -top-2 left-1/2 -translate-x-1/2 px-1.5 py-0.5 rounded text-[8px] font-bold uppercase tracking-wider text-white whitespace-nowrap" style="background:#9333EA;">Recommended</div>
+          <div class="text-xs font-bold">Recovery Pack</div>
+          <div class="text-[10px] mt-0.5 leading-tight">₹599 · 4 sessions × 30 min</div>
+          <div class="text-[9px] font-semibold text-white/90 mt-1 uppercase tracking-wider leading-tight">Café Premium · over 14 days</div>
+        </button>
+        <button class="border-2 border-gray-200 rounded-xl py-3 px-2 text-center">
+          <div class="text-xs font-bold text-gray-900">Premium</div>
+          <div class="text-[10px] text-gray-700 mt-0.5 leading-tight">₹399 · single 30-min session</div>
+          <div class="text-[9px] font-semibold text-gray-500 mt-1 uppercase tracking-wider leading-tight">Café Premium tier</div>
+        </button>
       </div>
 
       <div class="text-xs font-semibold text-gray-500 mb-2 uppercase tracking-wider">Pay via UPI</div>
@@ -860,8 +925,8 @@
         <button class="border border-gray-200 rounded-xl py-2.5 flex flex-col items-center gap-1"><div class="w-8 h-8 rounded-md flex items-center justify-center" style="background:#00BAF2;"><span class="text-white text-[10px] font-bold">Pa</span></div><span class="text-[10px] text-gray-700 font-medium">Paytm</span></button>
       </div>
 
-      <button class="w-full py-3 rounded-2xl font-semibold text-white" style="background:linear-gradient(135deg,#E91E63,#FF6B5B);box-shadow:0 6px 20px rgba(233,30,99,0.35);" onclick="paySuccess()">Pay ₹199 via GPay →</button>
-      <div class="text-center mt-2 text-[10px] text-gray-400">No auto-renew · One-tap refund within 7 days</div>
+      <button class="w-full py-3 rounded-2xl font-semibold text-white" style="background:linear-gradient(135deg,#E91E63,#FF6B5B);box-shadow:0 6px 20px rgba(233,30,99,0.35);" onclick="paySuccess()">Pay ₹599 via GPay · Recovery Pack →</button>
+      <div class="text-center mt-2 text-[10px] text-gray-400">No auto-renew · No per-minute meter · One-tap refund within 7 days</div>
     </div>
   </div>
 </div>
@@ -971,7 +1036,7 @@
   }
 
   function paySuccess(){
-    alert('Demo: ₹199 paid via GPay. Niharika rebook confirmed for 9:00 pm.');
+    alert('Demo: ₹599 Recovery Pack paid via GPay. Niharika rebook confirmed for 9:00 pm.');
     goTo(6);
   }
 
